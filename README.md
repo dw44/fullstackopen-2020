@@ -3,7 +3,7 @@ This repository will contain all assignment submissions for the Fullstack Open 2
 ```bash
 part0
 part1
-  courseinfo
+  course-information
   unicafe
   anecdotes
 part2

@@ -16,29 +16,45 @@ const Part = props => (
 
 // "Content" component refactored for exercise 1.2
 const Content = props => (
-  props.parts.map(part => <Part key={ Math.floor(Math.random() * 10000000) } title={ part.title } exerciseCount={ part.exercises } />)
+  props.parts.map( part => <Part 
+    key={ Math.floor( Math.random() * 10000000 ) } 
+    title={ part.name } 
+    exerciseCount={ part.exercises } />
+  )
 );
 
-// "Total" component for exercise 1.1
+// "Total" component refactored for exercise 1.4
 const Total = props => (
   <p>
-    Number of exercises { props.exerciseCounts.reduce((a, b) => a + b, 0) }
+    Number of exercises { props.exerciseCount }
   </p>
 );
 
+// "App" component refactored for exercise 1.5
 const App = () => {
-  const course = 'Half Stack application development';
-  const courseParts = [
-    { title: 'Fundamentals of React', exercises: 10 },
-    { title: 'Using props to pass data', exercises: 7 },
-    { title: 'State of a component', exercises: 14 }
-  ];
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7
+      },
+      {
+        name: 'State of a component',
+        exercises: 14
+      }
+    ]
+  };
 
   return (
     <div>
-      <Header courseName={ course } />
-      <Content parts={ courseParts } />
-      <Total exerciseCounts={ courseParts.map(part => part.exercises) } />
+      <Header courseName={ course.name } />
+      <Content parts={ course.parts } />
+      <Total exerciseCount={ course.parts.reduce((a, b) => a + b.exercises, 0) } />
     </div>
   );
 }
