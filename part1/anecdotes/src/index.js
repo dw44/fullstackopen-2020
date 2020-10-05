@@ -8,7 +8,7 @@ const App = ({ anecdotes }) => {
   const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
   /* 
     votesCast tracks how many votes have been cast for the currently 
-    displayed quote in a given display cycle
+    displayed quote in the current display cycle
   */
   const [votesCast, setVotesCast] = useState(0);
   
@@ -25,16 +25,17 @@ const App = ({ anecdotes }) => {
     
     setSelected(index);
     
-    // resets votes cast to 0 when a quote is displayed
+    // resets votes cast in current display cycle to 0 when a new quote is displayed
     setVotesCast(0);
   }
+
   const voteQuote = () => {
     // you can only vote for a quote once in a display cycle i.e. when votesCast === 0
     if (votesCast === 0) {
       const newState = [...votes];
       newState[selected] += 1;
       setVotes([...newState]);
-      // once a vote is cast, votesCast is changed to a nonzero value to avoid repeat voting
+      // once a vote is cast, votesCast for that display cycle is changed to a nonzero value to avoid repeat voting
       setVotesCast(1);
     }
   }
