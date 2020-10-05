@@ -2,31 +2,31 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-// "Header" component for exercise 1.1
-const Header = props => (
-  <h1>{ props.courseName }</h1>
+// refactored to get courseName prop through destructuring
+const Header = ({ courseName }) => (
+  <h1>{ courseName }</h1>
 );
 
-// "Part" component for exercise 1.2
-const Part = props => (
+// refactored to get title and exerciseCount props through destructuring
+const Part = ({ title, exerciseCount }) => (
   <p>
-    { props.title } { props.exerciseCount }
+    { title } { exerciseCount }
   </p>
 );
 
-// "Content" component refactored for exercise 1.2
-const Content = props => (
-  props.parts.map( part => <Part 
+// refactored to get parts prop through destructuring
+const Content = ({ parts }) => (
+  parts.map(part => <Part 
     key={ Math.floor( Math.random() * 10000000 ) } 
     title={ part.name } 
     exerciseCount={ part.exercises } />
   )
 );
 
-// "Total" component refactored for exercise 1.4
-const Total = props => (
+// refactored to get exerciseCount prop through destructuring
+const Total = ({ exerciseCount }) => (
   <p>
-    Number of exercises { props.exerciseCount }
+    Number of exercises { exerciseCount }
   </p>
 );
 
