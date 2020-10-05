@@ -10,7 +10,7 @@ const Header = ({ courseName }) => (
 // refactored to get title and exerciseCount props through destructuring
 const Part = ({ title, exerciseCount }) => (
   <p>
-    { title } { exerciseCount }
+    { title } - { exerciseCount }
   </p>
 );
 
@@ -26,7 +26,7 @@ const Content = ({ parts }) => (
 // refactored to get exerciseCount prop through destructuring
 const Total = ({ exerciseCount }) => (
   <p>
-    Number of exercises { exerciseCount }
+    Number of exercises - { exerciseCount }
   </p>
 );
 
