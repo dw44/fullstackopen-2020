@@ -1,0 +1,1 @@
+This application covers exercises 1.12 - 1.14 of Part-1 of the 'Fullstack Open' (https://fullstackopen.com/en).
