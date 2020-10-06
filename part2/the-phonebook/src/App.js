@@ -61,6 +61,14 @@ const App = () => {
     }
   }
 
+  const displayNames = filterValue.trim() === '' 
+    ? persons.map(person => 
+        <li key={ Math.floor(Math.random() * 1000000000)}>{ person.name } ( {person.number} )</li>
+      )
+    : persons.filter(person => person.name.toLowerCase().includes(filterValue.toLowerCase())).map(person => 
+        <li key={ Math.floor(Math.random() * 1000000000)}>{ person.name } ( {person.number} )</li>
+      )
+
   return (
     <div className="App">
       <h2>Phonebook</h2>
@@ -80,9 +88,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map(person => 
-          <li key={ Math.floor(Math.random() * 1000000000)}>{ person.name } ( {person.number} )</li>
-        )}
+        {displayNames}
       </ul>
     </div>
   );
