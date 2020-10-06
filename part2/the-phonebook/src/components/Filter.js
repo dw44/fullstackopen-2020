@@ -1,9 +1,10 @@
 import React from 'react';
 
-const Filter = props => {
+// created for exercise 2.10
+const Filter = ({ handleChange }) => {
   return (
     <div>
-      
+      Filter by Name: <input type="text" onChange={ handleChange } />
     </div>
   );
 }
