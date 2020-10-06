@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 import Filter from './components/Filter';
 import NewEntry from './components/NewEntry';
 import Display from './components/Display';
 
+
 // initialized for exercise 2.6
 const App = () => {
-  const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas', number: '072-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ]);
+  // refactored for exercise 2.11
+  const [ persons, setPersons ] = useState([]);
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber ] = useState('');
   const [ filterValue, setFilterValue ] = useState('');
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(results => setPersons(results.data));
+  }, []);
 
   // refactored for exercise 2.8
   const handleChangeName = event => setNewName(event.target.value);
@@ -31,7 +35,7 @@ const App = () => {
     event.preventDefault();
 
     // checks if a person entry for newName already exists
-    const nameExists = persons.filter(person => person.name === newName.trim()).length > 0
+    const nameExists = persons.filter(person => person.name === newName.trim()).length > 0;
     const numberExists = persons.filter(person => person.number === newNumber.trim()).length > 0;
 
     // the if statement ensures that the name field isn't empty or whitespace
