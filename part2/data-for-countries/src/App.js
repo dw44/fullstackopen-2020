@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import Search from './components/Search';
+import DisplayCountry from './components/DisplayCountry';
 
 const App = () => {
   const [ countries, setCounties ] = useState([]);
@@ -20,24 +21,21 @@ const App = () => {
   const searchResults = searchQuery.trim() === '' 
     ? []
     : countries
-        .filter(country => country.name.toLowerCase().includes(searchQuery))
-        .map(country => <p key={ country.alpha3Code }>{ country.name }</p>);
+        .filter(country => country.name.toLowerCase().includes(searchQuery));
 
   const display = searchResults.length > 10 
     ? <h3>Too many matches. Specify another filter</h3> 
     : searchResults.length > 1 
-      ? <h3>Between 1 and 10 results</h3>
+      ? searchResults.map(result => <p key={ result.topLevelDomain[0] }>{ result.name }</p>)
       :  searchResults.length > 0 
-        ? <h3>Exactly 1 result</h3>
-        : <h3>0 Results</h3>;
+        ? <DisplayCountry country={ searchResults[0] } />
+        : <h3>No matches found</h3>;
     
   return (
     <div className="App">
       <Search handleChange={ handleChangeSearch } searchQuery={ searchQuery } />
-      {/* <div>{ display }</div> */}
       <div>
         { display }
-        { searchResults }
       </div>
     </div>
   );
