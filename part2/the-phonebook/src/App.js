@@ -31,13 +31,31 @@ const App = () => {
   // added for exercise 2.9
   const handleChangeFilter = event => setFilterValue(event.target.value);
 
+  const resetForms = () => {
+    // helper function to reduce clutter
+    setNewName('');
+    setNewNumber('');
+    setFilterValue('');
+  }
+
+  const verifyFormFilled = () => {
+    // returns false if either name or number field is empty i.e. verification failed
+    if (newName.trim().length < 1 || newNumber.trim().length < 1) {
+      alert('Please enter a valid name and number. Neither field can be empty');
+      resetForms();
+      return false;
+    }
+    // return true if neither field is empty i.e. verification passed
+    return true;
+  }
 
   // completely rewritten for 2.18
   const handleSubmit = event => {
     event.preventDefault();
 
-    // confirm that name/number fields are not empty
-    if (newName.trim().length > 0 && newNumber.trim().length > 0) {
+    // verify that both fields are filled out
+    if (!verifyFormFilled()) return; 
+    else {
       // checks if a person entry for newName already exists
       const nameExists = persons.filter(person => person.name === newName.trim()).length > 0;
 
@@ -46,9 +64,10 @@ const App = () => {
 
         // in case 'new' entry is exact copy of an older entry
         if (newNumber === foundPerson.number) {
-          alert('This entry already exists'); 
+          alert('This entry already exists');
+          resetForms();
         } else {
-          // double check with user before updating data
+          // confirm with user before updating data
           const confirmUpdate = window.confirm(`${foundPerson.name} is already added to the phonebook. Replace old number with a new one?`);
           
           if (confirmUpdate) {
@@ -62,9 +81,7 @@ const App = () => {
               .updateEntry(foundPerson.id, updatedPerson)
               .then(returnedPerson => {
                 setPersons(persons.map(person => person.id !== returnedPerson.id ? person : updatedPerson))
-                setNewName('');
-                setNewNumber('');
-                setFilterValue('');
+                resetForms();
                 
                 // added for 2.19. Displayed upon succesfully updating an entry
                 setNotification([`Entry for ${ returnedPerson.name } succesfully updated!`, 'S']);
@@ -82,12 +99,11 @@ const App = () => {
               });
 
           } else { // if user chooses no to update prompt
-            setNewName('');
-            setNewNumber('');
-            setFilterValue('');
+            resetForms();
           }  
         }
-      } else { // if an entry for the name entered doesn't already exist
+      } else { 
+        // if an entry for the name entered doesn't already exist
         const personObject = {
           name: newName.trim(),
           number: newNumber.trim()
@@ -97,21 +113,13 @@ const App = () => {
           .create(personObject)
           .then(newPerson => {
             setPersons(persons.concat(newPerson));
-            setNewName('');
-            setNewNumber('');
-            setFilterValue('');
+            resetForms();
 
             // added for 2.19. Displayed upon succesfully adding an entry
             setNotification([`Entry for ${ newPerson.name } succesfully added!`, 'S']);
             setTimeout(() => setNotification([null, null]), 4000);
           });
       }
-    } else {
-      // an error is displayed and the form reset in case name, number, or both fields are empty
-      alert('Please enter a valid name and number. Neither field can be empty');
-      setNewName('');
-      setNewNumber('');
-      setFilterValue('');
     }
   }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-// created for exercise 2.10
+// created for exercise 2.19
 const Notification = ({ message }) => {
   if (message[0] === null) return null;
   else {
