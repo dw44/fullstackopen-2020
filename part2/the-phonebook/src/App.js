@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
 import Filter from './components/Filter';
 import NewEntry from './components/NewEntry';
 import Display from './components/Display';
-
+import personServices from './services/persons';
 
 // initialized for exercise 2.6
 const App = () => {
@@ -15,9 +14,9 @@ const App = () => {
   const [ filterValue, setFilterValue ] = useState('');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(results => setPersons(results.data));
+    personServices
+      .getAll()
+      .then(results => setPersons(results));
   }, []);
 
   // refactored for exercise 2.8
@@ -30,7 +29,7 @@ const App = () => {
   const handleChangeFilter = event => setFilterValue(event.target.value);
 
 
-  // refactored for exercise 2.7
+  // refactored for exercise 2.15
   const handleSubmit = event => {
     event.preventDefault();
 
@@ -58,9 +57,14 @@ const App = () => {
           number: newNumber.trim()
         };
 
-        setPersons(persons.concat(personObject));
-        setNewName('');
-        setNewNumber('');
+        // added for 2.15 - new entried now saved to server
+        personServices
+          .create(personObject)
+          .then(newPerson => {
+            setPersons(persons.concat(newPerson));
+            setNewName('');
+            setNewNumber('');
+          });        
       }
     } else {
       // an error is displayed and the form reset in case name, number, or both fields are empty
@@ -70,13 +74,32 @@ const App = () => {
     }
   }
 
-  // display all names when filter input is empty 
+  // added for exercise 2.17
+  const handleDelete = id => {
+    const confirm = window.confirm('Are you sure you want to delete this entry?');
+    if (confirm) {
+      personServices
+        .deleteEntry(id)
+        .then(() => {
+          // state changed inside "then" so it's only updated if request succeeds
+          setPersons(persons.filter(person => person.id !== id));
+        });
+    }
+  }
+
+  // refactored for 2.17, reformatted to reduce visual clutter 
   const displayNames = filterValue.trim() === '' 
     ? persons.map(person => 
-        <li key={ Math.floor(Math.random() * 1000000000)}>{ person.name } ( {person.number} )</li>
+        <li key={ person.id }>
+          { person.name } ( { person.number } ) 
+          <button onClick = { () => handleDelete(person.id) }>Delete</button>
+        </li>
       ) 
     : persons.filter(person => person.name.toLowerCase().includes(filterValue.toLowerCase())).map(person => 
-        <li key={ Math.floor(Math.random() * 1000000000)}>{ person.name } ( {person.number} )</li>
+        <li key={ person.id }>
+          { person.name } ( { person.number } )
+          <button onClick = { () => handleDelete(person.id) }>Delete</button>
+        </li>
       );
 
   return (
