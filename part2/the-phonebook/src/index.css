@@ -112,3 +112,14 @@ li > button {
 li > button:hover {
   background-color: #555;
 }
+
+/* Styles for successful notification */
+.notification {
+  width: 90%;
+  background-color: #dddddd;
+  border: 3px solid #00861b;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 1.2em;
+  color: #256600;
+}

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import NewEntry from './components/NewEntry';
 import Display from './components/Display';
+import Notification from './components/Notification';
 import personServices from './services/persons';
 
 // initialized for exercise 2.6
@@ -12,6 +13,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber ] = useState('');
   const [ filterValue, setFilterValue ] = useState('');
+  const [ notification, setNotification ] = useState(null);
 
   useEffect(() => {
     personServices
@@ -62,6 +64,10 @@ const App = () => {
                 setNewName('');
                 setNewNumber('');
                 setFilterValue('');
+                
+                // added for 2.19. Displayed upon succesfully updating an entry
+                setNotification(`Entry for ${ returnedPerson.name } succesfully updated!`);
+                setTimeout(() => setNotification(null), 4000);
               });
           } else { // if user chooses no to update prompt
             setNewName('');
@@ -82,6 +88,10 @@ const App = () => {
             setNewName('');
             setNewNumber('');
             setFilterValue('');
+
+            // added for 2.19. Displayed upon succesfully adding an entry
+            setNotification(`Entry for ${ newPerson.name } succesfully added!`);
+            setTimeout(() => setNotification(null), 4000);
           });
       }
     } else {
@@ -124,6 +134,7 @@ const App = () => {
   return (
     <div className="App">
       <h1>Phonebook</h1>
+      <Notification message={ notification } />
       <Filter handleChange={ handleChangeFilter } />
       <NewEntry 
         submit={ handleSubmit }  

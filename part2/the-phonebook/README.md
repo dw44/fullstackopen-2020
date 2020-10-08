@@ -1,4 +1,4 @@
-This application covers exercises 2.6 - 2.11, and 2.15 - 2.18 of Part-2 of the 'Fullstack Open' (https://fullstackopen.com/en).
+This application covers exercises 2.6 - 2.11, and 2.15 - 2.20 of Part-2 of the 'Fullstack Open' (https://fullstackopen.com/en).
 
 At this point, exercises 2.6, 2.7, 2.8, 2.9, 2.11, 2.15, 2.16, 2.17, and 2.18 have been completed. Certain exercises required overwriting code written for previous exercises.
 
