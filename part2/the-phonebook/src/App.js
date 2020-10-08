@@ -29,48 +29,67 @@ const App = () => {
   const handleChangeFilter = event => setFilterValue(event.target.value);
 
 
-  // refactored for exercise 2.15
+  // completely rewritten for 2.18
   const handleSubmit = event => {
     event.preventDefault();
 
-    // checks if a person entry for newName already exists
-    const nameExists = persons.filter(person => person.name === newName.trim()).length > 0;
-    const numberExists = persons.filter(person => person.number === newNumber.trim()).length > 0;
-
-    // the if statement ensures that the name field isn't empty or whitespace
+    // confirm that name/number fields are not empty
     if (newName.trim().length > 0 && newNumber.trim().length > 0) {
-      if (nameExists || numberExists) {
-        // an error is displayed and the form reset if the person, number, or both are already added 
-        if (nameExists || (nameExists && numberExists)){
-          alert(`${newName.trim()} is already added to the phonebook`);
-        } else if (numberExists && !nameExists) {
-          alert(`${newNumber.trim()} is already added to the phonebook`);
-        }
+      // checks if a person entry for newName already exists
+      const nameExists = persons.filter(person => person.name === newName.trim()).length > 0;
 
-        // Reset form inputs
-        setNewName('');
-        setNewNumber('');
-      } else {
-        // if person isn't already added, it is added to "persons" 
+      if (nameExists) {
+        const foundPerson = persons.find(person => person.name === newName.trim());
+
+        // in case 'new' entry is exact copy of an older entry
+        if (newNumber === foundPerson.number) {
+          alert('This entry already exists'); 
+        } else {
+          // double check with user before updating data
+          const confirmUpdate = window.confirm(`${foundPerson.name} is already added to the phonebook. Replace old number with a new one?`);
+          
+          if (confirmUpdate) {
+            const updatedPerson = {
+              ...foundPerson,
+              number: newNumber
+            };
+
+            // update person data 
+            personServices
+              .updateEntry(foundPerson.id, updatedPerson)
+              .then(returnedPerson => {
+                setPersons(persons.map(person => person.id !== returnedPerson.id ? person : updatedPerson))
+                setNewName('');
+                setNewNumber('');
+                setFilterValue('');
+              });
+          } else { // if user chooses no to update prompt
+            setNewName('');
+            setNewNumber('');
+            setFilterValue('');
+          }  
+        }
+      } else { // if an entry for the name entered doesn't already exist
         const personObject = {
           name: newName.trim(),
           number: newNumber.trim()
         };
 
-        // added for 2.15 - new entried now saved to server
         personServices
           .create(personObject)
           .then(newPerson => {
             setPersons(persons.concat(newPerson));
             setNewName('');
             setNewNumber('');
-          });        
+            setFilterValue('');
+          });
       }
     } else {
       // an error is displayed and the form reset in case name, number, or both fields are empty
       alert('Please enter a valid name and number. Neither field can be empty');
       setNewName('');
       setNewNumber('');
+      setFilterValue('');
     }
   }
 
