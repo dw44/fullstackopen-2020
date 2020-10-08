@@ -2,7 +2,7 @@
   "persons": [
     {
       "name": "Arto Hellas",
-      "number": "125-9007216",
+      "number": "125-6160744",
       "id": 1
     },
     {
@@ -19,11 +19,6 @@
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": 4
-    },
-    {
-      "name": "Mogul Khan",
-      "number": "90-7258816",
-      "id": 5
     }
   ]
 }

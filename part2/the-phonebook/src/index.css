@@ -114,7 +114,7 @@ li > button:hover {
 }
 
 /* Styles for successful notification */
-.notification {
+.notification-success {
   width: 90%;
   background-color: #dddddd;
   border: 3px solid #00861b;
@@ -122,4 +122,15 @@ li > button:hover {
   padding: 5px;
   font-size: 1.2em;
   color: #256600;
+}
+
+/* Styles for error notification */
+.notification-error {
+  width: 90%;
+  background-color: #dddddd;
+  border: 3px solid #bb0000;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 1.2em;
+  color: #660000;
 }

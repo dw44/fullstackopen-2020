@@ -13,7 +13,8 @@ const App = () => {
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber ] = useState('');
   const [ filterValue, setFilterValue ] = useState('');
-  const [ notification, setNotification ] = useState(null);
+  // first item is message, second is notification type: S for success, E for error
+  const [ notification, setNotification ] = useState([null, null]);
 
   useEffect(() => {
     personServices
@@ -66,9 +67,20 @@ const App = () => {
                 setFilterValue('');
                 
                 // added for 2.19. Displayed upon succesfully updating an entry
-                setNotification(`Entry for ${ returnedPerson.name } succesfully updated!`);
-                setTimeout(() => setNotification(null), 4000);
+                setNotification([`Entry for ${ returnedPerson.name } succesfully updated!`, 'S']);
+                setTimeout(() => setNotification([null, null]), 4000);
+              })
+              .catch(error => {
+                // added for 2.20
+                // displays a message and removes entry from state if already deleted from server
+                setNotification([
+                  `The entry for ${foundPerson.name} has already been deleted from the server`,
+                  'E'
+                ]);
+                setTimeout(() => setNotification([null, null]), 4000);
+                setPersons(persons.filter(person => person.id !== foundPerson.id));
               });
+
           } else { // if user chooses no to update prompt
             setNewName('');
             setNewNumber('');
@@ -90,8 +102,8 @@ const App = () => {
             setFilterValue('');
 
             // added for 2.19. Displayed upon succesfully adding an entry
-            setNotification(`Entry for ${ newPerson.name } succesfully added!`);
-            setTimeout(() => setNotification(null), 4000);
+            setNotification([`Entry for ${ newPerson.name } succesfully added!`, 'S']);
+            setTimeout(() => setNotification([null, null]), 4000);
           });
       }
     } else {
@@ -111,6 +123,16 @@ const App = () => {
         .deleteEntry(id)
         .then(() => {
           // state changed inside "then" so it's only updated if request succeeds
+          setPersons(persons.filter(person => person.id !== id));
+        })
+        .catch(error => {
+          // added for 2.20
+          // displays a message and removes entry from state if already deleted from server
+          setNotification([
+            `The entry for ${persons[id-1].name} has already been deleted from the server`,
+            'E'
+          ]);
+          setTimeout(() => setNotification([null, null]), 4000);
           setPersons(persons.filter(person => person.id !== id));
         });
     }
