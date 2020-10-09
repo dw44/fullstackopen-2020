@@ -1,0 +1,1 @@
+This application covers exercises 3.1 - 3.6 of Part-2 of the 'Fullstack Open' (https://fullstackopen.com/en).
