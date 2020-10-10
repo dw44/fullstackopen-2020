@@ -27,7 +27,8 @@ let persons = [
   { "name": "Mary Poppendieck", "number": "39-23-6423122", "id": 4 },
   { "name": "Lesale Deathbringer", "number": "136-9165825", "id": 5 },
   { "name": "Mogul Khan", "number": "20-7721696", "id": 6 },
-  { "name": "Kardel Sharpeye", "number": "965-2525250", "id": 7 }
+  { "name": "Kardel Sharpeye", "number": "965-2525250", "id": 7 },
+  { "name": "Leshrac", "number": "15-2015944", "id": 8 }
 ];
 
 const generateID = () => {
