@@ -32,9 +32,6 @@ if (process.argv.length === 5) {
       console.log('Phonebook Entry Saved:');
       console.log(result);
       mongoose.connection.close();
-    })
-    .catch(error => {
-        console.log(error);
     });
 } else if (process.argv.length === 3) {
   // in case no arguments defining a new person are provided, fetch and display all existing records
@@ -43,13 +40,10 @@ if (process.argv.length === 5) {
       console.log('Phonebook Entries:');
       result.forEach(person => console.log(person));
       mongoose.connection.close();
-    })
-    .catch(error => {
-      console.log(error);
     });
 } else {
   console.log('Please enter the query in the proper format:\n');
   console.log('node <mongo.js> <password> for all records, or\n');
-  console.log('node <mongo.js> <password> <entryName> <entryNumber> to make a new entry.\n');
+  console.log('node <mongo.js> <password> <entryName> <entryNumber> to make a new entry.');
   process.exit(1);
 }
