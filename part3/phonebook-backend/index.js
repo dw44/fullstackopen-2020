@@ -1,10 +1,14 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
+const Person = require('./models/person');
+const { response } = require('express');
 
 // logs request body for post requests only
+// for exercise 3.8
 morgan.token('requestBody', req => {
   if (req.method === 'POST') {
     return JSON.stringify(req.body); 
@@ -14,55 +18,50 @@ morgan.token('requestBody', req => {
 });
 
 app.use(express.json());
+// for exercise 3.8
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :requestBody'));
 app.use(cors());
 app.use(express.static('build')); 
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 
-let persons = [
-  { "name": "Arto Hellas", "number": "125-6160744", "id": 1 },
-  { "name": "Ada Lovelace", "number": "250-7258844", "id": 2 },
-  { "name": "Dan Abramov", "number": "12-43-234345", "id": 3 },
-  { "name": "Mary Poppendieck", "number": "39-23-6423122", "id": 4 },
-  { "name": "Lesale Deathbringer", "number": "136-9165825", "id": 5 },
-  { "name": "Mogul Khan", "number": "20-7721696", "id": 6 },
-  { "name": "Kardel Sharpeye", "number": "965-2525250", "id": 7 },
-  { "name": "Leshrac", "number": "15-2015944", "id": 8 }
-];
-
-const generateID = () => {
-  let id;
-  do { // to avoid accidentally generating an id that already exists
-    id = Math.floor(Math.random() * 1000000);
-  } while (persons.map(p => p.id).includes(id));
-  return id;
-}
+// Not needed after switching to DB in exercise 3.13
+// const generateID = () => {
+//   let id;
+//   do { // to avoid accidentally generating an id that already exists
+//     id = Math.floor(Math.random() * 1000000);
+//   } while (persons.map(p => p.id).includes(id));
+//   return id;
+// }
 
 app.get('/', (req, res) => {
   res.send('Online!');
 });
 
+// modified to get data from db for exercise 3.13
 app.get('/info', (req, res) => {
-  const total = persons.length;
-  const dateTime = new Date();
-  const info = `<p>Phonebook has info for ${ total } people.</p><p>${ dateTime }</p>`;
-  res.send(info);
+  Person.find({})
+  .then(results => {
+    const total = results.length;
+    const dateTime = new Date();
+    const info = `<p>Phonebook has info for ${ total } people.</p><p>${ dateTime }</p>`;
+    res.send(info);
+  });
 });
 
+// modified to get data from db for exercise 3.13
 app.get('/api/persons', (req, res) => {
-  res.json(persons);
+  Person.find({})
+    .then(entries => {
+      res.json(entries);
+    });
 });
 
 app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const person = persons.find(person => person.id === id);
-
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).json({ error: 'Entry not found' });
-  }
+  Person.findById(req.params.id)
+    .then(result => {
+      res.json(result);
+    })
 });
 
 app.delete('/api/persons/:id', (req, res) => {
