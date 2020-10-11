@@ -76,28 +76,18 @@ app.delete('/api/persons/:id', (req, res) => {
   }
 });
 
+// updated for exercise 3.14 to save data to db instead of locally
 app.post('/api/persons', (req, res) => {
-  const newID = generateID();
-  
-  if (!req.body.name || req.body.name.trim() === '') {
-    // in case the name field is empty or whitespace
-    return res.status(400).json({ error: 'Name field can\'t be empty'});
-  } else if (!req.body.number || req.body.number.trim() === '') {
-    // in case the number field is empty or whitespace
-    return res.status(400).json({ error: 'Number field can\'t be empty'});
-  } else if (persons.findIndex(person => person.name === req.body.name.trim()) !== -1) {
-    // in case an entry for a person with the entered name already exists
-    return res.status(400).json({ error: 'An entry for this name already exists'});
-  }
-
-  const newPerson = {
-    id: newID,
+  const newPerson = new Person({
     name: req.body.name,
     number: req.body.number
-  }
+  });
 
-  persons = persons.concat(newPerson);
-  res.json(newPerson);
+  newPerson.save()
+    .then(result => {
+      console.log(result)
+      res.json(result);
+    });
 });
 
 app.listen(PORT, () => console.log(`App running on port ${ PORT }`));
