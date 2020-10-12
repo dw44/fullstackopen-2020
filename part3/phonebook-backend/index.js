@@ -92,7 +92,8 @@ app.put('/api/persons/:id', (req, res, next) => {
     number: req.body.number
   };
 
-  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+  // refactored to validate data for update operations
+  Person.findByIdAndUpdate(req.params.id, person, { new: true, runValidators: true })
     .then(result => res.json(result))
     .catch(error => next(error));
 });
@@ -108,7 +109,7 @@ const errorHandler = (err, req, res, next) => {
   if (err.name === 'CastError') {
     return res.status(400).send({ Error: 'Malformed ID' });
   } else if (err.name === 'ValidationError') { // this block added for exercise 3.19
-    return res.status(409).send({ Error: err.message, Test: err });
+    return res.status(409).send({ Error: err.message });
   }
   next(err);
 }

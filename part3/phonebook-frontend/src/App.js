@@ -85,17 +85,12 @@ const App = () => {
                 
                 // added for 2.19. Displayed upon succesfully updating an entry
                 setNotification([`Entry for ${ returnedPerson.name } succesfully updated!`, 'S']);
-                setTimeout(() => setNotification([null, null]), 4000);
+                setTimeout(() => setNotification([null, null]), 5000);
               })
               .catch(error => {
-                // added for 2.20
-                // displays a message and removes entry from state if already deleted from server
-                setNotification([
-                  `The entry for ${foundPerson.name} has already been deleted from the server`,
-                  'E'
-                ]);
-                setTimeout(() => setNotification([null, null]), 4000);
-                setPersons(persons.filter(person => person.id !== foundPerson.id));
+                // updated for 3.20. error messages displayed for failing validation on update operations
+                setNotification([error.response.data.Error, 'E']);
+                setTimeout(() => setNotification([null, null]), 5000);
               });
 
           } else { // if user chooses no to update prompt
@@ -117,7 +112,11 @@ const App = () => {
 
             // added for 2.19. Displayed upon succesfully adding an entry
             setNotification([`Entry for ${ newPerson.name } succesfully added!`, 'S']);
-            setTimeout(() => setNotification([null, null]), 4000);
+            setTimeout(() => setNotification([null, null]), 5000);
+          })
+          .catch(error => { // catch block added for exercise 3.20
+            setNotification([error.response.data.Error, 'E']);
+            setTimeout(() => setNotification([null, null]), 5000);
           });
       }
     }
@@ -140,7 +139,7 @@ const App = () => {
             `The entry for ${persons[id-1].name} has already been deleted from the server`,
             'E'
           ]);
-          setTimeout(() => setNotification([null, null]), 4000);
+          setTimeout(() => setNotification([null, null]), 5000);
           setPersons(persons.filter(person => person.id !== id));
         });
     }
