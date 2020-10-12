@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
   res.send('Online!');
 });
 
-// modified to get data from db for exercise 3.13
+// modified to get data from db for exercise 3.13 (also covers 3.18)
 app.get('/info', (req, res) => {
   Person.find({})
   .then(results => {
@@ -47,6 +47,7 @@ app.get('/api/persons', (req, res) => {
     });
 });
 
+// refactored for 3.18
 app.get('/api/persons/:id', (req, res, next) => {
   Person.findById(req.params.id)
     .then(result => {
@@ -82,6 +83,7 @@ app.post('/api/persons', (req, res) => {
     });
 });
 
+// updated for 3.17
 app.put('/api/persons/:id', (req, res, next) => {
   const person = {
     name: req.body.name,
