@@ -6,6 +6,5 @@ A custom version of airbnb style guide configuration was used for ESLint. Some r
 
 The current state of this project is as it should be at the conclusion of exercise 3.22.
 
-## Link to application deployed for exercise 3.10 and 3.11
-## Updated version deployed for 3.21, replaced with linted build from exercise 3.22
+## Up to date app deployed to Heroku as of exercise 3.22
  https://phonebook-fso-444.herokuapp.com/
