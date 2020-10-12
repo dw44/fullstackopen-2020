@@ -25,15 +25,6 @@ app.use(express.static('build'));
 
 const PORT = process.env.PORT;
 
-// Not needed after switching to DB in exercise 3.13
-// const generateID = () => {
-//   let id;
-//   do { // to avoid accidentally generating an id that already exists
-//     id = Math.floor(Math.random() * 1000000);
-//   } while (persons.map(p => p.id).includes(id));
-//   return id;
-// }
-
 app.get('/', (req, res) => {
   res.send('Online!');
 });
@@ -62,18 +53,16 @@ app.get('/api/persons/:id', (req, res) => {
     .then(result => {
       res.json(result);
     })
+    .catch(error => next(error));
 });
 
-app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const person = persons.find(person => person.id === id);
-
-  if (person) {
-    persons = persons.filter(person => person.id !== id);
-    res.status(204).end();
-  } else {
-    res.status(404).json({ error: 'No entry found' });
-  }
+// refactored for exercise 3.15
+app.delete('/api/persons/:id', (req, res, next) => {
+  Person.findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(204).end();
+    })
+    .catch(error => next(error));
 });
 
 // updated for exercise 3.14 to save data to db instead of locally
@@ -89,5 +78,21 @@ app.post('/api/persons', (req, res) => {
       res.json(result);
     });
 });
+
+const unknownEndpoint = (req, res) => {
+  response.status(404).send({ Error: 'Unknown Endpoint' });
+}
+
+// added in exercise 3.15
+const errorHandler = (err, req, res, next) => {
+  console.error(err.message);
+  if (err.name === 'CastError' && error.kind == 'ObjectId') {
+    return response.status(400).send({ Error: 'Malformed ID' });
+  }
+  next(error);
+}
+
+app.use(unknownEndpoint);
+app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`App running on port ${ PORT }`));
