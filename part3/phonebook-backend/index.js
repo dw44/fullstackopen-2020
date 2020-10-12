@@ -69,7 +69,8 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch(error => next(error));
 });
 
-// updated for exercise 3.14 to save data to db instead of locally
+// updated for exercise 3.14 to save data to db instead of locally.
+// refactored for exercise 3.19
 app.post('/api/persons', (req, res, next) => {
   const newPerson = new Person({
     name: req.body.name,
@@ -80,7 +81,7 @@ app.post('/api/persons', (req, res, next) => {
     .then(result => {
       console.log(result)
       res.json(result);
-    })
+    }) // catch block added for exercise 3.19
     .catch(error => next(error));
 });
 
@@ -106,8 +107,8 @@ const errorHandler = (err, req, res, next) => {
   console.error(err.message);
   if (err.name === 'CastError') {
     return res.status(400).send({ Error: 'Malformed ID' });
-  } else if (err.name === 'ValidationError') {
-    return res.status(409).send({ Error: 'Name needs to be unique. An entry for the given name already exists' })
+  } else if (err.name === 'ValidationError') { // this block added for exercise 3.19
+    return res.status(409).send({ Error: err.message, Test: err });
   }
   next(err);
 }
