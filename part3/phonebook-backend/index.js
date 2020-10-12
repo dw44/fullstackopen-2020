@@ -70,7 +70,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 });
 
 // updated for exercise 3.14 to save data to db instead of locally
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const newPerson = new Person({
     name: req.body.name,
     number: req.body.number
@@ -80,7 +80,8 @@ app.post('/api/persons', (req, res) => {
     .then(result => {
       console.log(result)
       res.json(result);
-    });
+    })
+    .catch(error => next(error));
 });
 
 // updated for 3.17
@@ -105,6 +106,8 @@ const errorHandler = (err, req, res, next) => {
   console.error(err.message);
   if (err.name === 'CastError') {
     return res.status(400).send({ Error: 'Malformed ID' });
+  } else if (err.name === 'ValidationError') {
+    return res.status(409).send({ Error: 'Name needs to be unique. An entry for the given name already exists' })
   }
   next(err);
 }
