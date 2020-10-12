@@ -1,4 +1,4 @@
-// mongo.js file created for exercise 3.12 
+// mongo.js file created for exercise 3.12
 
 const mongoose = require('mongoose');
 
@@ -14,7 +14,7 @@ mongoose.connect(dbURI, {
 
 const personSchema = mongoose.Schema({
   name: String,
-  number: String
+  number: String,
 });
 
 const Person = mongoose.model('Person', personSchema);
@@ -23,12 +23,12 @@ if (process.argv.length === 5) {
   // only try to create and save a new entry if the proper number of arguments are provided
   const person = new Person({
     name: process.argv[3],
-    number: process.argv[4]
+    number: process.argv[4],
   });
   // create and save new document
   person
     .save()
-    .then(result => {
+    .then((result) => {
       console.log('Phonebook Entry Saved:');
       console.log(result);
       mongoose.connection.close();
@@ -36,9 +36,9 @@ if (process.argv.length === 5) {
 } else if (process.argv.length === 3) {
   // in case no arguments defining a new person are provided, fetch and display all existing records
   Person.find({})
-    .then(result => {
+    .then((result) => {
       console.log('Phonebook Entries:');
-      result.forEach(person => console.log(person));
+      result.forEach((person) => console.log(person));
       mongoose.connection.close();
     });
 } else {

@@ -11,6 +11,9 @@ part2
   course-information
   data-for-countries
   the-phonebook
+part3
+  phonebook-backend
+  phonebook-frontend
 ```
 
 Where an exercise in one part of the course builds on an exercise from a previous part, the project from the previous part is not modified. Instead, a new copy of the exercise, based on the state of the project at the conclusion of the most recent part it was used in, is created and any further work for that part of the course is done in that copy. 
@@ -18,8 +21,8 @@ Where an exercise in one part of the course builds on an exercise from a previou
 Parts completed so far:<br/>
 Part 0<br/>
 Part 1<br/>
-Part 2
+Part 2<br/>
+Part 3
 
 # Links to deployed apps:
-
-[Phonebook app for exercises 3.10 and 3.11](https://phonebook-fso-444.herokuapp.com/)
+[Production Phonebook app deployed to Heroku for section 3](https://phonebook-fso-444.herokuapp.com/)
