@@ -5,7 +5,6 @@ require('dotenv').config();
 
 const app = express();
 const Person = require('./models/person');
-const { response } = require('express');
 
 // logs request body for post requests only
 // for exercise 3.8
@@ -48,10 +47,14 @@ app.get('/api/persons', (req, res) => {
     });
 });
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
   Person.findById(req.params.id)
     .then(result => {
-      res.json(result);
+      if (result) {
+        res.json(result);
+      } else {
+        res.status(404).end();
+      }
     })
     .catch(error => next(error));
 });
@@ -79,17 +82,29 @@ app.post('/api/persons', (req, res) => {
     });
 });
 
+app.put('/api/persons/:id', (req, res, next) => {
+  const person = {
+    name: req.body.name,
+    number: req.body.number
+  };
+
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then(result => res.json(result))
+    .catch(error => next(error));
+});
+
+// added in exercise 3.15 - covers exercise 3.16 
 const unknownEndpoint = (req, res) => {
-  response.status(404).send({ Error: 'Unknown Endpoint' });
+  return res.status(404).send({ Error: 'Unknown Endpoint' });
 }
 
-// added in exercise 3.15
+// added in exercise 3.15 - covers exercise 3.16
 const errorHandler = (err, req, res, next) => {
   console.error(err.message);
-  if (err.name === 'CastError' && error.kind == 'ObjectId') {
-    return response.status(400).send({ Error: 'Malformed ID' });
+  if (err.name === 'CastError') {
+    return res.status(400).send({ Error: 'Malformed ID' });
   }
-  next(error);
+  next(err);
 }
 
 app.use(unknownEndpoint);
