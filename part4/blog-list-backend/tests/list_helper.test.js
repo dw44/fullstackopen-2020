@@ -2,6 +2,7 @@ const {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 } = require('../utils/list_helper');
 
 test('dummy returns one', () => {
@@ -105,6 +106,52 @@ describe('correctly returns blog with most likes', () => {
         title: 'Creating React/Node apps that connect to PostgreSQL and HarperDB',
         author: 'Andrew Baisden',
         likes: 10,
+      });
+  });
+});
+
+// added for exercise 4.6
+describe('correctly returns author with most blogs', () => {
+  // dummy blog list.. only relevant fields included
+  const blogList = [
+    { author: 'ABC XYZ', title: 'KLM 1', likes: 10 },
+    { author: 'ABC XYZ', title: 'THR LES', likes: 6 },
+    { author: 'AXE AXE', title: 'PNP EXE', likes: 7 },
+    { author: 'NPR SSX', title: 'BRB BRB', likes: 14 },
+    { author: 'AYB BBN', title: 'SXS SWQ', likes: 7 },
+    { author: 'BNN CNN', title: 'QWW', likes: 3 },
+    { author: 'NPR SSX', title: 'NOC', likes: 10 },
+    { author: 'QWE ASD', title: 'ANP', likes: 11 },
+    { author: 'AXE AXE', title: 'RNG 1', likes: 20 },
+    { author: 'AXE AXE', title: 'RNG 2', likes: 25 },
+    { author: 'AXE AXE', title: 'RNG 3', likes: 44 },
+  ];
+
+  test('returns empty object for empty blog list', () => {
+    expect(mostBlogs([])).toEqual({});
+  });
+
+  test('returns only entry for blog list with one entry', () => {
+    expect(mostBlogs(listWithOneBlog))
+      .toEqual({
+        author: 'Edsger W. Dijkstra',
+        blogs: 1,
+      });
+  });
+
+  test('returns author with most blogs', () => {
+    expect(mostBlogs(blogList))
+      .toEqual({
+        author: 'AXE AXE',
+        blogs: 4,
+      });
+  });
+
+  test('returns first match in case of multiple authors with the same number of blogs', () => {
+    expect(mostBlogs(listWithFiveBlogs))
+      .toEqual({
+        author: 'Camila Lenis',
+        blogs: 1,
       });
   });
 });
