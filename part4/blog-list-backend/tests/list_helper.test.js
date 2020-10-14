@@ -3,6 +3,7 @@ const {
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 } = require('../utils/list_helper');
 
 test('dummy returns one', () => {
@@ -54,7 +55,7 @@ const listWithFiveBlogs = [
     title: 'How I lost 1 year of life doing failed crypto startup',
     author: 'Przemysław Thomann',
     url: 'https://dev.to/_pthomann/how-i-lost-1-year-of-life-doing-failed-crypto-startup-5hlp',
-    likes: 2,
+    likes: 10,
     __v: 0,
   },
   {
@@ -81,7 +82,7 @@ describe('correctly returns total likes', () => {
 
   test('returns sum of "likes" values for list with five blogs', () => {
     const result = totalLikes(listWithFiveBlogs);
-    expect(result).toBe(27);
+    expect(result).toBe(35);
   });
 });
 
@@ -110,23 +111,24 @@ describe('correctly returns blog with most likes', () => {
   });
 });
 
+// for tests that follow (4.6 and 4.7)
+const blogList = [
+  { author: 'ABC XYZ', title: 'KLM 1', likes: 10 },
+  { author: 'ABC XYZ', title: 'THR LES', likes: 6 },
+  { author: 'AXE AXE', title: 'PNP EXE', likes: 7 },
+  { author: 'NPR SSX', title: 'BRB BRB', likes: 14 },
+  { author: 'AYB BBN', title: 'SXS SWQ', likes: 7 },
+  { author: 'BNN CNN', title: 'QWW', likes: 3 },
+  { author: 'NPR SSX', title: 'NOC', likes: 10 },
+  { author: 'QWE ASD', title: 'ANP', likes: 11 },
+  { author: 'AXE AXE', title: 'RNG 1', likes: 20 },
+  { author: 'AXE AXE', title: 'RNG 2', likes: 25 },
+  { author: 'AXE AXE', title: 'RNG 3', likes: 44 },
+];
+
 // added for exercise 4.6
 describe('correctly returns author with most blogs', () => {
   // dummy blog list.. only relevant fields included
-  const blogList = [
-    { author: 'ABC XYZ', title: 'KLM 1', likes: 10 },
-    { author: 'ABC XYZ', title: 'THR LES', likes: 6 },
-    { author: 'AXE AXE', title: 'PNP EXE', likes: 7 },
-    { author: 'NPR SSX', title: 'BRB BRB', likes: 14 },
-    { author: 'AYB BBN', title: 'SXS SWQ', likes: 7 },
-    { author: 'BNN CNN', title: 'QWW', likes: 3 },
-    { author: 'NPR SSX', title: 'NOC', likes: 10 },
-    { author: 'QWE ASD', title: 'ANP', likes: 11 },
-    { author: 'AXE AXE', title: 'RNG 1', likes: 20 },
-    { author: 'AXE AXE', title: 'RNG 2', likes: 25 },
-    { author: 'AXE AXE', title: 'RNG 3', likes: 44 },
-  ];
-
   test('returns empty object for empty blog list', () => {
     expect(mostBlogs([])).toEqual({});
   });
@@ -152,6 +154,37 @@ describe('correctly returns author with most blogs', () => {
       .toEqual({
         author: 'Camila Lenis',
         blogs: 1,
+      });
+  });
+});
+
+// added for exercise 4.7
+describe('correctly returns author whose blogs have gotten the most likes', () => {
+  test('returns empty object for empty array arg', () => {
+    expect(mostLikes([])).toEqual({});
+  });
+
+  test('returns only entry for list with one blog', () => {
+    expect(mostLikes(listWithOneBlog))
+      .toEqual({
+        author: 'Edsger W. Dijkstra',
+        likes: 5,
+      });
+  });
+
+  test('returns correct author for list of blogs', () => {
+    expect(mostLikes(blogList))
+      .toEqual({
+        author: 'AXE AXE',
+        likes: 96,
+      });
+  });
+
+  test('returns first match for multiple authors with same number of likes', () => {
+    expect(mostLikes(listWithFiveBlogs))
+      .toEqual({
+        author: 'Andrew Baisden',
+        likes: 10,
       });
   });
 });

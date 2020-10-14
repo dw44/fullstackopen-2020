@@ -41,9 +41,32 @@ const mostBlogs = (blogs) => {
   return most;
 };
 
+// added for exercise 4.7
+const mostLikes = (blogs) => {
+  if (!blogs.length) return {};
+
+  const authorLikes = {};
+
+  // populate 'authorLikes' with authors and total likes for their blogs
+  _.forEach(blogs, (blog) => {
+    authorLikes[blog.author] = _.keys(authorLikes).includes(blog.author)
+      ? authorLikes[blog.author] + blog.likes
+      : blog.likes;
+  });
+
+  // get author with most likes from authorLikes
+  const maxLikes = _.maxBy(_.keys(authorLikes), (key) => authorLikes[key]);
+
+  return {
+    author: maxLikes,
+    likes: authorLikes[maxLikes],
+  };
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };
