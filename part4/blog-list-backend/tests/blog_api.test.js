@@ -46,12 +46,27 @@ test('new blog is saved to db following post request', async () => {
     .expect('Content-Type', /application\/json/);
 
   const blogList = await helper.blogsInDB();
-  console.log(blogList);
   expect(blogList.length).toEqual(helper.initialBlogs.length + 1);
 
   const blogAuthors = blogList.map((blogPost) => blogPost.author);
-  console.log(blogAuthors);
   expect(blogAuthors).toContain('Leshrac');
+});
+
+// test for exercise 4.11
+test('likes default to 0', async () => {
+  const blog = {
+    title: 'Test blog for testing api',
+    author: 'Leshrac',
+    url: 'https://www.leshrac.com/testBlog',
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(blog);
+
+  const blogList = await helper.blogsInDB();
+  const { likes } = blogList[blogList.length - 1];
+  expect(likes).toBe(0);
 });
 
 afterAll(() => {
