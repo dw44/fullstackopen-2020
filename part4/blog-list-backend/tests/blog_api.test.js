@@ -30,6 +30,30 @@ test('blog posts have a unique "id" identifier', async () => {
   });
 });
 
+// tests for exercise 4.10
+test('new blog is saved to db following post request', async () => {
+  const blog = {
+    title: 'Test blog for testing api',
+    author: 'Leshrac',
+    url: 'https://www.leshrac.com/testBlog',
+    likes: 0,
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(blog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const blogList = await helper.blogsInDB();
+  console.log(blogList);
+  expect(blogList.length).toEqual(helper.initialBlogs.length + 1);
+
+  const blogAuthors = blogList.map((blogPost) => blogPost.author);
+  console.log(blogAuthors);
+  expect(blogAuthors).toContain('Leshrac');
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
