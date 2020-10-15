@@ -69,6 +69,18 @@ test('likes default to 0', async () => {
   expect(likes).toBe(0);
 });
 
+// test for exercise 4.12
+test('returns bad request if both title and url are missing', async () => {
+  const blog = {
+    author: 'Leshrac',
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(blog)
+    .expect(400);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
