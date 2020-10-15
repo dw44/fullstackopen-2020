@@ -1,6 +1,8 @@
 // module created for exercise 4.2
 const info = (...params) => {
-  console.log(...params);
+  if (process.env.NODE_ENV !== 'test') {
+    console.log(...params);
+  }
 };
 
 const error = (...params) => {

@@ -1,5 +1,6 @@
 // module created for exercise 4.2
 const express = require('express');
+require('express-async-errors');
 
 const app = express();
 
