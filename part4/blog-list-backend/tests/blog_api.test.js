@@ -97,6 +97,26 @@ test('delete a blog entry', async () => {
   expect(urls).not.toContain(blogToDelete.url);
 });
 
+// added for exercise 4.14
+test('updates blog when given a valid id', async () => {
+  const startBlogs = await helper.blogsInDB();
+  const blogToEditID = startBlogs[0].id;
+
+  const updates = {
+    author: 'Kawaii',
+    likes: 16,
+  };
+
+  await api
+    .put(`/api/blogs/${blogToEditID}`)
+    .send(updates)
+    .expect(204);
+
+  const updatedBlogs = await helper.blogsInDB();
+  expect(updatedBlogs[0].likes).toBe(updates.likes);
+  expect(updatedBlogs[0].author).toBe(updates.author);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
