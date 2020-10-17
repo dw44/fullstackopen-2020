@@ -2,11 +2,15 @@ const usersRouter = require('express').Router();
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 
+// refactored for 4.17
 usersRouter.get('/', async (request, response) => {
-  const users = await User.find({});
+  const users = await User.find({}).populate('blogs', {
+    title: 1, author: 1, url: 1,
+  });
   response.json(users);
 });
 
+// refactored for 4.17
 usersRouter.post('/', async (request, response) => {
   const { body } = request;
 
