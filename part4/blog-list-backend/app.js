@@ -8,11 +8,13 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const config = require('./utils/config');
+const middleware = require('./utils/middleware');
 const logger = require('./utils/logger');
 const blogRouter = require('./controllers/blogs');
 const usersRouter = require('./controllers/users');
 
 logger.info('Logging in to MongoDB...');
+
 mongoose.connect(config.MONGODB_URI, {
   useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true,
 })
@@ -24,5 +26,7 @@ app.use(express.json());
 
 app.use('/api/blogs', blogRouter);
 app.use('/api/users', usersRouter);
+
+app.use(middleware.errorHandler);
 
 module.exports = app;
