@@ -6,6 +6,9 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'JsonWebTokenError') {
     response.status(401).json({ error: 'Invalid token' });
   }
+  if (error.name === 'CastError') {
+    response.status(400).json({ error: 'Incorrect ID' });
+  }
   next(error);
 };
 

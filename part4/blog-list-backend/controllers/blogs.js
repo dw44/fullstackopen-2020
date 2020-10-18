@@ -57,9 +57,33 @@ blogRouter.post('/', async (request, response) => {
 });
 
 // added for exercise 4.13
+// rewritten for exercise 4.21
 blogRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndRemove(request.params.id);
-  response.status(204).end();
+  const { token } = request;
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+
+  if (!token || !decodedToken.id) {
+    response.status(401).json({ error: 'Must be logged in to delete a blog' });
+  }
+
+  const blog = await Blog.findById(request.params.id);
+
+  if (!blog) {
+    // blog not found
+    response.status(404).json({ error: 'Blog not found' });
+  }
+
+  const blogUserID = blog.user.toString(); // user who saved blog
+
+  if (blogUserID === decodedToken.id) {
+    const user = await User.findById(blogUserID);
+    user.blogs = user.blogs.filter((b) => b.toString() !== blog._id.toString());
+    await user.save();
+    await Blog.findByIdAndDelete(request.params.id);
+    return response.status(204).json({ status: 'Blog deleted!' });
+  }
+
+  return response.status(401).json({ error: 'This user is not authorized to delete this blog' });
 });
 
 // added for exercise 4.14
