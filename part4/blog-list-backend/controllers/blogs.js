@@ -7,13 +7,13 @@ const Blog = require('../models/Blog');
 const User = require('../models/User');
 
 // added for 4.19
-const getJWT = (request) => {
-  const authorization = request.get('authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7);
-  }
-  return null;
-};
+// const getJWT = (request) => {
+//   const authorization = request.get('authorization');
+//   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+//     return authorization.substring(7);
+//   }
+//   return null;
+// };
 
 // refactored for exercise 4.8
 // refactored for 4.17
@@ -26,13 +26,13 @@ blogRouter.get('/', async (request, response) => {
 // refactored for exercise 4.12
 // refactored for 4.17
 // refactored for 4.19
+// refactored for 4.20
 blogRouter.post('/', async (request, response) => {
-  const { body } = request;
+  const { body, token } = request;
 
   if (!body.title && !body.url) {
     response.status(400).end();
   } else {
-    const token = getJWT(request);
     const decodedToken = jwt.verify(token, process.env.SECRET);
     if (!token || !decodedToken.id) {
       return response.status(401).json({ error: 'Missing or invalid token' });
