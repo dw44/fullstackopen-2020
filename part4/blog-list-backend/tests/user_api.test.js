@@ -2,14 +2,15 @@ const mongoose = require('mongoose');
 const supertest = require('supertest');
 
 const app = require('../app');
-const User = require('../models/User');
+// const User = require('../models/User');
 const helper = require('./test_helper');
 
 const api = supertest(app);
 
-beforeEach(async () => {
-  await User.deleteMany({});
-});
+// disabled to test login functionality in blog api
+// beforeEach(async () => {
+//   await User.deleteMany({});
+// });
 
 describe('incomplete data while creating new user', () => {
   test('no username provided', async () => {
@@ -87,6 +88,16 @@ test('user already exists', async () => {
   const response = await api.post('/api/users').send(newUser);
   expect(response.statusCode).toBe(400);
   expect(JSON.parse(response.text).error).toBe('User validation failed: username: Error, expected `username` to be unique. Value: `abcdefgh`');
+});
+
+test('create new', async () => {
+  const newUser = {
+    name: 'Test 2',
+    username: 'test2',
+    password: 'test2',
+  };
+
+  await api.post('/api/users').send(newUser);
 });
 
 afterAll(() => {

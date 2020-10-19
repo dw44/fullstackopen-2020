@@ -6,15 +6,6 @@ const jwt = require('jsonwebtoken');
 const Blog = require('../models/Blog');
 const User = require('../models/User');
 
-// added for 4.19
-// const getJWT = (request) => {
-//   const authorization = request.get('authorization');
-//   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-//     return authorization.substring(7);
-//   }
-//   return null;
-// };
-
 // refactored for exercise 4.8
 // refactored for 4.17
 blogRouter.get('/', async (request, response) => {
@@ -87,6 +78,7 @@ blogRouter.delete('/:id', async (request, response) => {
 });
 
 // added for exercise 4.14
+// needs to have auth integrated at some point
 blogRouter.put('/:id', async (request, response) => {
   const { body } = request;
   const original = await Blog.findById(request.params.id);

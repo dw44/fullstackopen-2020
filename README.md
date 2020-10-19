@@ -24,7 +24,8 @@ Parts completed so far:<br/>
 Part 0<br/>
 Part 1<br/>
 Part 2<br/>
-Part 3
+Part 3<br/>
+Part 4
 
 # Links to deployed apps:
 [Production Phonebook app deployed to Heroku for section 3](https://phonebook-fso-444.herokuapp.com/)

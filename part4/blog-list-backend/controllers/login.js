@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 // module added for 4.18
 const loginRouter = require('express').Router();
 const jwt = require('jsonwebtoken');
