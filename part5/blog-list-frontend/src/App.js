@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-import LoginForm from './components/LoginForm';
-import BlogList from './components/BlogList';
+import LoginForm from './components/LoginForm/LoginForm';
+import SignOut from './components/SignOut/SignOut';
+import BlogList from './components/BlogList/BlogList';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import './App.css';
@@ -18,6 +19,14 @@ const App = () => {
     );  
   }, []);
 
+  useEffect(() => {
+    const loggedInUser = JSON.parse(window.localStorage.getItem('loggedInUser'));
+    if (loggedInUser) {
+      setUser(loggedInUser);
+    }
+  }, []);
+
+  // added for 5.1
   const handleLogin = async event => {
     event.preventDefault();
     try {
@@ -25,11 +34,26 @@ const App = () => {
       setUser(user);
       setUsername('');
       setPassword('');
-      console.log(user);
+      window.localStorage.setItem('loggedInUser', JSON.stringify(user));
     } catch (error) {
       alert('Invalid Username or Password');
+      setUsername('');
+      setPassword('');
     }
   }
+
+  const handleLogout = () => {
+    window.localStorage.removeItem('loggedInUser');
+    setUser(null);
+  }
+
+  // added for 5.2
+  const loggedInDisplay = () => (
+    <div>
+      <SignOut user={ user } signOut={ handleLogout } />
+      <BlogList blogs={ blogs } />
+    </div>
+  );
 
   return (
     <div className="App">
@@ -41,7 +65,7 @@ const App = () => {
           password={ password }
           setPassword={ setPassword }
         /> :
-        <BlogList blogs={ blogs } />
+        loggedInDisplay()
       }      
     </div>
   );
