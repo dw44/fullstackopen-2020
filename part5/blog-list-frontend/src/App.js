@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import LoginForm from './components/LoginForm/LoginForm';
 import SignOut from './components/SignOut/SignOut';
+import CreateNew from './components/CreateNew/CreateNew';
 import BlogList from './components/BlogList/BlogList';
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -12,6 +13,9 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setURL] = useState('');
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -23,6 +27,7 @@ const App = () => {
     const loggedInUser = JSON.parse(window.localStorage.getItem('loggedInUser'));
     if (loggedInUser) {
       setUser(loggedInUser);
+      blogService.setToken(loggedInUser.token);
     }
   }, []);
 
@@ -31,6 +36,7 @@ const App = () => {
     event.preventDefault();
     try {
       const user = await loginService.login({ username, password });
+      blogService.setToken(user.token);
       setUser(user);
       setUsername('');
       setPassword('');
@@ -45,12 +51,42 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedInUser');
     setUser(null);
+    blogService.setToken('');
+  }
+
+  const submitNewBlog = async event => {
+    event.preventDefault();
+    try {
+      const response = await blogService.createNew({
+        author,
+        title,
+        url,
+      });
+      setBlogs([...blogs, response]);
+      setTitle('');
+      setAuthor('');
+      setURL('');
+    } catch (error) {
+      alert('Could not create new blog!');
+      setTitle('');
+      setAuthor('');
+      setURL('');
+    }
   }
 
   // added for 5.2
   const loggedInDisplay = () => (
     <div>
       <SignOut user={ user } signOut={ handleLogout } />
+      <CreateNew 
+        submit={ submitNewBlog }
+        title={ title }
+        setTitle={ setTitle }
+        author={ author }
+        setAuthor={ setAuthor }
+        url={ url }
+        setURL={ setURL }
+      />
       <BlogList blogs={ blogs } />
     </div>
   );
@@ -66,7 +102,7 @@ const App = () => {
           setPassword={ setPassword }
         /> :
         loggedInDisplay()
-      }      
+      }
     </div>
   );
 }
