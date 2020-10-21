@@ -1,0 +1,10 @@
+Show notifications for:
+
+Successful login-
+Unsuccessful login-
+
+Sign out-
+
+Successful post-
+Unsuccessful post-
+

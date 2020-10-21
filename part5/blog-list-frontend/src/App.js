@@ -4,6 +4,7 @@ import LoginForm from './components/LoginForm/LoginForm';
 import SignOut from './components/SignOut/SignOut';
 import CreateNew from './components/CreateNew/CreateNew';
 import BlogList from './components/BlogList/BlogList';
+import Notification from './components/Notification/Notification';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import './App.css';
@@ -16,6 +17,7 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setURL] = useState('');
+  const [notification, setNotification] = useState([null, null]);
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -31,7 +33,15 @@ const App = () => {
     }
   }, []);
 
+  // added for 5.4
+  const handleNotification = (message, type='success') => {
+    // type defaults to success unless error is explicitly specified 
+    setNotification([message, type]);
+    setTimeout(() => setNotification([null, null]), 4000);
+  }
+
   // added for 5.1
+  // refactored for 5.4
   const handleLogin = async event => {
     event.preventDefault();
     try {
@@ -41,19 +51,30 @@ const App = () => {
       setUsername('');
       setPassword('');
       window.localStorage.setItem('loggedInUser', JSON.stringify(user));
+      handleNotification(
+        `Successfully logged in as ${ user.name }`
+      );
     } catch (error) {
-      alert('Invalid Username or Password');
       setUsername('');
       setPassword('');
+      handleNotification(
+        'Incorrect username or password',
+        'error'
+      );
     }
   }
 
+  // refactored to include notifications for 5.4
   const handleLogout = () => {
     window.localStorage.removeItem('loggedInUser');
     setUser(null);
     blogService.setToken('');
+    handleNotification(
+      'Successfully logged out'
+    );
   }
 
+  // refactored to include notifications for 5.4
   const submitNewBlog = async event => {
     event.preventDefault();
     try {
@@ -63,11 +84,17 @@ const App = () => {
         url,
       });
       setBlogs([...blogs, response]);
+      handleNotification(
+        `A new blog - ${ response.title }, by ${ response.author } - has been added`,
+      );
       setTitle('');
       setAuthor('');
       setURL('');
     } catch (error) {
-      alert('Could not create new blog!');
+      handleNotification(
+        'Could not add blog entry. Verify that you\'re logged in and all fields are filled out!',
+        'error'
+      );
       setTitle('');
       setAuthor('');
       setURL('');
@@ -91,8 +118,13 @@ const App = () => {
     </div>
   );
 
+  // refactored to include notifications for 5.4
   return (
     <div className="App">
+      {notification[0] ? 
+        <Notification message={ notification[0] } type={ notification[1] } /> :
+        null      
+      }
       {user === null ? 
         <LoginForm
           handleSubmit={ handleLogin }
