@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import LoginForm from './components/LoginForm/LoginForm';
 import SignOut from './components/SignOut/SignOut';
 import CreateNew from './components/CreateNew/CreateNew';
 import BlogList from './components/BlogList/BlogList';
 import Notification from './components/Notification/Notification';
+import Togglable from './components/Togglable/Togglable';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import './App.css';
@@ -75,6 +76,7 @@ const App = () => {
   }
 
   // refactored to include notifications for 5.4
+  // updated for 5.5
   const submitNewBlog = async event => {
     event.preventDefault();
     try {
@@ -90,6 +92,7 @@ const App = () => {
       setTitle('');
       setAuthor('');
       setURL('');
+      newBlogRef.current.toggleVisible();
     } catch (error) {
       handleNotification(
         'Could not add blog entry. Verify that you\'re logged in and all fields are filled out!',
@@ -98,22 +101,29 @@ const App = () => {
       setTitle('');
       setAuthor('');
       setURL('');
+      newBlogRef.current.toggleVisible();
     }
   }
 
+  // added for 5.5
+  const newBlogRef = useRef();
+
   // added for 5.2
+  // refactored for 5.5
   const loggedInDisplay = () => (
     <div>
       <SignOut user={ user } signOut={ handleLogout } />
-      <CreateNew 
-        submit={ submitNewBlog }
-        title={ title }
-        setTitle={ setTitle }
-        author={ author }
-        setAuthor={ setAuthor }
-        url={ url }
-        setURL={ setURL }
-      />
+      <Togglable buttonText="New Entry" ref={ newBlogRef }>         
+        <CreateNew 
+          submit={ submitNewBlog }
+          title={ title }
+          setTitle={ setTitle }
+          author={ author }
+          setAuthor={ setAuthor }
+          url={ url }
+          setURL={ setURL }
+        />
+      </Togglable>
       <BlogList blogs={ blogs } />
     </div>
   );
