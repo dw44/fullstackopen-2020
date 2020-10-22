@@ -24,7 +24,7 @@ const App = () => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     );  
-  }, []);
+  }, [blogs]);
 
   useEffect(() => {
     const loggedInUser = JSON.parse(window.localStorage.getItem('loggedInUser'));
