@@ -21,10 +21,14 @@ const App = () => {
   const [notification, setNotification] = useState([null, null]);
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    );  
-  }, []);
+    // refactored for exercise 5.9 to sort by number of likes
+    blogService
+      .getAll()
+      .then(blogs =>
+        blogs.sort((b1, b2) => (b1.likes > b2.likes) ? -1 : 1)
+      )
+      .then(blogs => setBlogs(blogs));  
+  }, [blogs]);
 
   useEffect(() => {
     const loggedInUser = JSON.parse(window.localStorage.getItem('loggedInUser'));
