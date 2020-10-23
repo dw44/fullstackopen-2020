@@ -1,10 +1,23 @@
 import React, { useState } from 'react';
+import blogServices from '../../services/blogs';
 import classes from './Blog.module.css';
 
 // updated for 5.7
 const Blog = ({ blog }) => {
-  const [showDetail, setShowDetail] = useState(true);
+  const [showDetail, setShowDetail] = useState(false);
+  const [likes, setLikes] = useState(blog.likes);
   const toggleShowDetail = () => setShowDetail(!showDetail);
+  
+  // added for 5.8
+  const newLike = async () => {
+    const updated = await blogServices.addLike(blog.id, {
+      likes: likes + 1
+    });
+
+    if (updated.status === 204) {
+      setLikes(likes + 1);
+    }
+  }
 
   return (
     <div className={classes.BlogDiv}>
@@ -14,7 +27,7 @@ const Blog = ({ blog }) => {
         { showDetail ? 'Hide Details' : 'Show Details'}
       </button>
       <div className={ classes.Details } style={ showDetail ? null : { display: 'none' } }>
-        <p>Likes: { blog.likes } <button className={classes.Like}>Like</button></p>
+        <p>Likes: { likes } <button onClick={ newLike } className={classes.Like}>Like</button></p>
         <p>URL: { blog.url }</p>
         <p>Added By: { blog.user.name }</p>
       </div>

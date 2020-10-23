@@ -24,4 +24,10 @@ const createNew = async newBlog => {
   return response.data;
 }
 
-export default { getAll, createNew, setToken };
+// added for 5.8
+const addLike = async (id, newBlog) => {
+  const response = await axios.put(`${baseUrl}/${id}`, newBlog);
+  return response;
+}
+
+export default { getAll, createNew, setToken, addLike };
