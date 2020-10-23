@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+
+import Notification from '../Notification/Notification';
 import blogServices from '../../services/blogs';
 import classes from './Blog.module.css';
 
@@ -6,6 +8,8 @@ import classes from './Blog.module.css';
 const Blog = ({ blog }) => {
   const [showDetail, setShowDetail] = useState(false);
   const [likes, setLikes] = useState(blog.likes);
+  const [notification, setNotification] = useState([null, null]);
+
   const toggleShowDetail = () => setShowDetail(!showDetail);
   
   // added for 5.8
@@ -19,8 +23,24 @@ const Blog = ({ blog }) => {
     }
   }
 
+  // added for 5.10
+  const deleteHandler = async () => {
+    try {
+      await blogServices.deleteBlog(blog.id);
+    } catch (error) {
+      setNotification(['An error was encountered. You are not authorized to delete this entry.', 'error']);
+      setTimeout(() => {
+        setNotification([null, null]);
+      }, 3000);
+    }
+  }
+
   return (
     <div className={classes.BlogDiv}>
+      {notification[0] ? 
+        <Notification message={ notification[0] } type={ notification[1] } /> :
+        null      
+      }
       {blog.title}&nbsp;&nbsp; - 
       <span className={classes.author}>&nbsp;&nbsp;{blog.author}</span>
       <button onClick={ toggleShowDetail } className={ classes.ShowDetailBtn }>
@@ -31,11 +51,9 @@ const Blog = ({ blog }) => {
         <p>URL: { blog.url }</p>
         <p>Added By: { blog.user.name }</p>
       </div>
-
+      <button onClick={ deleteHandler }>Delete Entry</button>
    </div>
   );
 }
-
-
 
 export default Blog;

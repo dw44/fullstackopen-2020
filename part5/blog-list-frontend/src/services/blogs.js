@@ -26,8 +26,17 @@ const createNew = async newBlog => {
 
 // added for 5.8
 const addLike = async (id, newBlog) => {
-  const response = await axios.put(`${baseUrl}/${id}`, newBlog);
+  const response = await axios.put(`${ baseUrl }/${ id }`, newBlog);
   return response;
 }
 
-export default { getAll, createNew, setToken, addLike };
+// added for 5.10
+const deleteBlog = async (id) => {
+  const config = {
+    headers: { Authorization: token }
+  };
+  const response = await axios.delete(`${ baseUrl }/${ id }`, config);
+  return response;
+}
+
+export default { getAll, createNew, setToken, addLike, deleteBlog };
