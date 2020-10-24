@@ -24,10 +24,8 @@ const App = () => {
     // refactored for exercise 5.9 to sort by number of likes
     blogService
       .getAll()
-      .then(blogs =>
-        blogs.sort((b1, b2) => (b1.likes > b2.likes) ? -1 : 1)
-      )
-      .then(blogs => setBlogs(blogs));  
+      .then((blogs) => blogs.sort((b1, b2) => ((b1.likes > b2.likes) ? -1 : 1)))
+      .then((blogs) => setBlogs(blogs));
   }, [blogs]);
 
   useEffect(() => {
@@ -39,15 +37,15 @@ const App = () => {
   }, []);
 
   // added for 5.4
-  const handleNotification = (message, type='success') => {
-    // type defaults to success unless error is explicitly specified 
+  const handleNotification = (message, type = 'success') => {
+    // type defaults to success unless error is explicitly specified
     setNotification([message, type]);
     setTimeout(() => setNotification([null, null]), 4000);
-  }
+  };
 
   // added for 5.1
   // refactored for 5.4
-  const handleLogin = async event => {
+  const handleLogin = async (event) => {
     event.preventDefault();
     try {
       const user = await loginService.login({ username, password });
@@ -57,17 +55,17 @@ const App = () => {
       setPassword('');
       window.localStorage.setItem('loggedInUser', JSON.stringify(user));
       handleNotification(
-        `Successfully logged in as ${ user.name }`
+        `Successfully logged in as ${user.name}`,
       );
     } catch (error) {
       setUsername('');
       setPassword('');
       handleNotification(
         'Incorrect username or password',
-        'error'
+        'error',
       );
     }
-  }
+  };
 
   // refactored to include notifications for 5.4
   const handleLogout = () => {
@@ -75,13 +73,16 @@ const App = () => {
     setUser(null);
     blogService.setToken('');
     handleNotification(
-      'Successfully logged out'
+      'Successfully logged out',
     );
-  }
+  };
+
+  // added for 5.5
+  const newBlogRef = useRef();
 
   // refactored to include notifications for 5.4
   // updated for 5.5
-  const submitNewBlog = async event => {
+  const submitNewBlog = async (event) => {
     event.preventDefault();
     try {
       const response = await blogService.createNew({
@@ -91,7 +92,7 @@ const App = () => {
       });
       setBlogs([...blogs, response]);
       handleNotification(
-        `A new blog - ${ response.title }, by ${ response.author } - has been added`,
+        `A new blog - ${response.title}, by ${response.author} - has been added`,
       );
       setTitle('');
       setAuthor('');
@@ -100,57 +101,54 @@ const App = () => {
     } catch (error) {
       handleNotification(
         'Could not add blog entry. Verify that you\'re logged in and all fields are filled out!',
-        'error'
+        'error',
       );
       setTitle('');
       setAuthor('');
       setURL('');
       newBlogRef.current.toggleVisible();
     }
-  }
-
-  // added for 5.5
-  const newBlogRef = useRef();
+  };
 
   // added for 5.2
   // refactored for 5.5
   const loggedInDisplay = () => (
     <div>
-      <SignOut user={ user } signOut={ handleLogout } />
-      <Togglable buttonText="New Entry" ref={ newBlogRef }>         
-        <CreateNew 
-          submit={ submitNewBlog }
-          title={ title }
-          setTitle={ setTitle }
-          author={ author }
-          setAuthor={ setAuthor }
-          url={ url }
-          setURL={ setURL }
+      <SignOut user={user} signOut={handleLogout} />
+      <Togglable buttonText="New Entry" ref={newBlogRef}>
+        <CreateNew
+          submit={submitNewBlog}
+          title={title}
+          setTitle={setTitle}
+          author={author}
+          setAuthor={setAuthor}
+          url={url}
+          setURL={setURL}
         />
       </Togglable>
-      <BlogList blogs={ blogs } />
+      <BlogList blogs={blogs} />
     </div>
   );
 
   // refactored to include notifications for 5.4
   return (
     <div className="App">
-      {notification[0] ? 
-        <Notification message={ notification[0] } type={ notification[1] } /> :
-        null      
-      }
-      {user === null ? 
-        <LoginForm
-          handleSubmit={ handleLogin }
-          username={ username }
-          setUsername={ setUsername }
-          password={ password }
-          setPassword={ setPassword }
-        /> :
-        loggedInDisplay()
-      }
+      {notification[0]
+        ? <Notification message={notification[0]} type={notification[1]} />
+        : null}
+      {user === null
+        ? (
+          <LoginForm
+            handleSubmit={handleLogin}
+            username={username}
+            setUsername={setUsername}
+            password={password}
+            setPassword={setPassword}
+          />
+        )
+        : loggedInDisplay()}
     </div>
   );
-}
+};
 
 export default App;

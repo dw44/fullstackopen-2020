@@ -11,17 +11,17 @@ const Blog = ({ blog }) => {
   const [notification, setNotification] = useState([null, null]);
 
   const toggleShowDetail = () => setShowDetail(!showDetail);
-  
+
   // added for 5.8
   const newLike = async () => {
     const updated = await blogServices.addLike(blog.id, {
-      likes: likes + 1
+      likes: likes + 1,
     });
 
     if (updated.status === 204) {
       setLikes(likes + 1);
     }
-  }
+  };
 
   // added for 5.10
   const deleteHandler = async () => {
@@ -33,27 +33,40 @@ const Blog = ({ blog }) => {
         setNotification([null, null]);
       }, 3000);
     }
-  }
+  };
 
   return (
     <div className={classes.BlogDiv}>
-      {notification[0] ? 
-        <Notification message={ notification[0] } type={ notification[1] } /> :
-        null      
-      }
-      {blog.title}&nbsp;&nbsp; - 
-      <span className={classes.author}>&nbsp;&nbsp;{blog.author}</span>
-      <button onClick={ toggleShowDetail } className={ classes.ShowDetailBtn }>
+      {notification[0]
+        ? <Notification message={notification[0]} type={notification[1]} />
+        : null}
+      {blog.title}
+&nbsp;&nbsp; -
+      <span className={classes.author}>
+        {blog.author}
+      </span>
+      <button onClick={toggleShowDetail} className={classes.ShowDetailBtn}>
         { showDetail ? 'Hide Details' : 'Show Details'}
       </button>
-      <div className={ classes.Details } style={ showDetail ? null : { display: 'none' } }>
-        <p>Likes: { likes } <button onClick={ newLike } className={classes.Like}>Like</button></p>
-        <p>URL: { blog.url }</p>
-        <p>Added By: { blog.user.name }</p>
+      <div className={classes.Details} style={showDetail ? null : { display: 'none' }}>
+        <p>
+          Likes:
+          { likes }
+          {' '}
+          <button onClick={newLike} className={classes.Like}>Like</button>
+        </p>
+        <p>
+          URL:
+          { blog.url }
+        </p>
+        <p>
+          Added By:
+          { blog.user.name }
+        </p>
       </div>
-      <button onClick={ deleteHandler }>Delete Entry</button>
-   </div>
+      <button onClick={deleteHandler}>Delete Entry</button>
+    </div>
   );
-}
+};
 
 export default Blog;
