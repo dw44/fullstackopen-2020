@@ -110,8 +110,16 @@ const App = () => {
     }
   };
 
+  // added for 5.15
+  const addLike = async (id, likes) => {
+    await blogService.addLike(id, {
+      likes: likes + 1,
+    });
+  };
+
   // added for 5.2
   // refactored for 5.5
+  // BlogList modified for 5.15 to include addLike prop
   const loggedInDisplay = () => (
     <div>
       <SignOut user={user} signOut={handleLogout} />
@@ -126,7 +134,7 @@ const App = () => {
           setURL={setURL}
         />
       </Togglable>
-      <BlogList blogs={blogs} />
+      <BlogList addLike={addLike} blogs={blogs} />
     </div>
   );
 

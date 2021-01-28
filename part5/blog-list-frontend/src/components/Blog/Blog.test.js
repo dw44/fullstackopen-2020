@@ -2,12 +2,12 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';
-import { prettyDOM } from '@testing-library/dom';
 
 import Blog from './Blog';
 
 // File created for 5.13
-let component;
+let component; let
+  mockHandler;
 
 // set dummy blog component up for tests
 beforeEach(() => {
@@ -24,7 +24,9 @@ beforeEach(() => {
     },
   };
 
-  component = render(<Blog blog={testBlog} />);
+  mockHandler = jest.fn();
+
+  component = render(<Blog blog={testBlog} addLike={mockHandler} />);
 });
 
 // tests for 5.13
@@ -47,6 +49,20 @@ test('likes and url are displayed after show button is clicked', () => {
   // detailDiv should have display: block style after "show" button is clicked
   fireEvent.click(button);
   expect(detailDiv).toHaveStyle('display: block');
+});
+
+// tests for 5.15
+test('Clicking like registers two events on fireEvent', () => {
+  fireEvent.click(component.container.querySelector('.blogDetails'));
+  const likeButton = component.container.querySelector('.likeButton');
+
+  // first click - mock.calls should have length 1
+  fireEvent.click(likeButton);
+  expect(mockHandler.mock.calls).toHaveLength(1);
+
+  // second click - mock.calls should have length 2
+  fireEvent.click(likeButton);
+  expect(mockHandler.mock.calls).toHaveLength(2);
 });
 
 /*

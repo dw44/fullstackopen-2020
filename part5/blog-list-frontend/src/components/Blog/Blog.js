@@ -4,24 +4,12 @@ import Notification from '../Notification/Notification';
 import blogServices from '../../services/blogs';
 import classes from './Blog.module.css';
 
-// updated for 5.14
-const Blog = ({ blog }) => {
+// updated for 5.15
+const Blog = ({ blog, addLike }) => {
   const [showDetail, setShowDetail] = useState(false);
-  const [likes, setLikes] = useState(blog.likes);
   const [notification, setNotification] = useState([null, null]);
 
   const toggleShowDetail = () => setShowDetail(!showDetail);
-
-  // added for 5.8
-  const newLike = async () => {
-    const updated = await blogServices.addLike(blog.id, {
-      likes: likes + 1,
-    });
-
-    if (updated.status === 204) {
-      setLikes(likes + 1);
-    }
-  };
 
   // added for 5.10
   const deleteHandler = async () => {
@@ -51,9 +39,9 @@ const Blog = ({ blog }) => {
       <div className={[classes.Details, 'blogDetails'].join(' ')} style={showDetail ? null : { display: 'none' }}>
         <p className="likesCount">
           Likes:
-          { likes }
+          { blog.likes }
           {' '}
-          <button onClick={newLike} className={classes.Like}>Like</button>
+          <button onClick={() => addLike(blog.id, blog.likes)} className={[classes.Like, 'likeButton'].join(' ')}>Like</button>
         </p>
         <p className="blogURL">
           URL:
