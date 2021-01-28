@@ -29,7 +29,7 @@ const Blog = ({ blog, addLike }) => {
         ? <Notification message={notification[0]} type={notification[1]} />
         : null}
       {blog.title}
-&nbsp;&nbsp; -
+      &nbsp;&nbsp;-&nbsp;&nbsp;
       <span className={classes.author}>
         {blog.author}
       </span>

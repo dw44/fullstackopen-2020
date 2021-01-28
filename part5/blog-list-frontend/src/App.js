@@ -15,9 +15,6 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setURL] = useState('');
   const [notification, setNotification] = useState([null, null]);
 
   useEffect(() => {
@@ -82,8 +79,10 @@ const App = () => {
 
   // refactored to include notifications for 5.4
   // updated for 5.5
-  const submitNewBlog = async (event) => {
-    event.preventDefault();
+  // refactored heavily for 5.16. Now takes a blog object and submits using axios
+  // doesn't serve as main event handler for submit any more
+  const submitNewBlog = async (blog) => {
+    const { author, title, url } = blog;
     try {
       const response = await blogService.createNew({
         author,
@@ -94,18 +93,13 @@ const App = () => {
       handleNotification(
         `A new blog - ${response.title}, by ${response.author} - has been added`,
       );
-      setTitle('');
-      setAuthor('');
-      setURL('');
+
       newBlogRef.current.toggleVisible();
     } catch (error) {
       handleNotification(
         'Could not add blog entry. Verify that you\'re logged in and all fields are filled out!',
         'error',
       );
-      setTitle('');
-      setAuthor('');
-      setURL('');
       newBlogRef.current.toggleVisible();
     }
   };
@@ -125,13 +119,7 @@ const App = () => {
       <SignOut user={user} signOut={handleLogout} />
       <Togglable buttonText="New Entry" ref={newBlogRef}>
         <CreateNew
-          submit={submitNewBlog}
-          title={title}
-          setTitle={setTitle}
-          author={author}
-          setAuthor={setAuthor}
-          url={url}
-          setURL={setURL}
+          submitBlog={submitNewBlog}
         />
       </Togglable>
       <BlogList addLike={addLike} blogs={blogs} />
