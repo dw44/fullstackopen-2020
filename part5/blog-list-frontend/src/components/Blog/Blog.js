@@ -4,7 +4,7 @@ import Notification from '../Notification/Notification';
 import blogServices from '../../services/blogs';
 import classes from './Blog.module.css';
 
-// updated for 5.7
+// updated for 5.14
 const Blog = ({ blog }) => {
   const [showDetail, setShowDetail] = useState(false);
   const [likes, setLikes] = useState(blog.likes);
@@ -45,17 +45,17 @@ const Blog = ({ blog }) => {
       <span className={classes.author}>
         {blog.author}
       </span>
-      <button onClick={toggleShowDetail} className={classes.ShowDetailBtn}>
+      <button onClick={toggleShowDetail} className={[classes.ShowDetailBtn, 'toggleDisplayBtn'].join(' ')}>
         { showDetail ? 'Hide Details' : 'Show Details'}
       </button>
       <div className={[classes.Details, 'blogDetails'].join(' ')} style={showDetail ? null : { display: 'none' }}>
-        <p>
+        <p className="likesCount">
           Likes:
           { likes }
           {' '}
           <button onClick={newLike} className={classes.Like}>Like</button>
         </p>
-        <p>
+        <p className="blogURL">
           URL:
           { blog.url }
         </p>
