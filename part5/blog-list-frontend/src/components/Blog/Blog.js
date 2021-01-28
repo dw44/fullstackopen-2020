@@ -48,7 +48,7 @@ const Blog = ({ blog }) => {
       <button onClick={toggleShowDetail} className={classes.ShowDetailBtn}>
         { showDetail ? 'Hide Details' : 'Show Details'}
       </button>
-      <div className={classes.Details} style={showDetail ? null : { display: 'none' }}>
+      <div className={[classes.Details, 'blogDetails'].join(' ')} style={showDetail ? null : { display: 'none' }}>
         <p>
           Likes:
           { likes }
