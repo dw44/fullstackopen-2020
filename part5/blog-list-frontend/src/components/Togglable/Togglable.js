@@ -8,11 +8,11 @@ const Togglable = forwardRef((props, ref) => {
   const toggleVisible = () => setChildVisible(!childVisible);
 
   useImperativeHandle(ref, () => ({ toggleVisible }));
-
+  // toggle-button class added to button for 5.19  
   return (
     <div className={classes.Main}>
       <button
-        className={classes.Toggle}
+        className={[classes.Toggle, 'toggle-button'].join(' ')}
         style={childVisible ? { display: 'none' } : null}
         onClick={toggleVisible}
       >

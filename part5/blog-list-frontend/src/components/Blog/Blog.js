@@ -22,9 +22,9 @@ const Blog = ({ blog, addLike }) => {
       }, 3000);
     }
   };
-
+  // blog-display class added for 5.19
   return (
-    <div className={classes.BlogDiv}>
+    <div className={[classes.BlogDiv, 'blog-display'].join(' ')}>
       {notification[0]
         ? <Notification message={notification[0]} type={notification[1]} />
         : null}

@@ -41,9 +41,32 @@ describe('Blog app', function() {
       // cy.contains('Incorrect username or password');
 
       // bonus exercise
+      // background color is given in hex in css file. equivalent rgb value used here
       cy.get('#notification')
         .should('contain', 'Incorrect username or password')
         .and('have.css', 'background-color', 'rgb(207, 19, 19)'); 
     });
   });
+
+  // describe block for 5.19 to check that a logged in user can submit a blog
+  describe.only('When logged in', function() {
+    beforeEach(function() {
+      cy.get('#username').type('tester');
+      cy.get('#password').type('testing123');
+      cy.get('#login-button').click();
+    });
+
+    it('Logged in user can submit a blog', function() {
+      cy.get('.toggle-button').click();
+      cy.get('#title-inp').type('Testing React');
+      cy.get('#author-inp').type('React Tester');
+      cy.get('#url-inp').type('www.reacttester.com/1');
+      cy.get('#submit-new').click();
+      
+      // blog display div will only contain successfully submitted blogs
+      cy.get('.blog-display')
+        .should('contain', 'Testing React');
+    });
+  });
+
 });

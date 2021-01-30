@@ -53,7 +53,7 @@ const CreateNew = ({ submitBlog }) => {
           id="url-inp"
         />
       </div>
-      <button type="submit">Create New</button>
+      <button id="submit-new" type="submit">Create New</button>
     </form>
   );
 };
