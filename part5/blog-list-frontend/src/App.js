@@ -23,7 +23,7 @@ const App = () => {
       .getAll()
       .then((blogs) => blogs.sort((b1, b2) => ((b1.likes > b2.likes) ? -1 : 1)))
       .then((blogs) => setBlogs(blogs));
-  }, [blogs]);
+  }, []);
 
   useEffect(() => {
     const loggedInUser = JSON.parse(window.localStorage.getItem('loggedInUser'));
