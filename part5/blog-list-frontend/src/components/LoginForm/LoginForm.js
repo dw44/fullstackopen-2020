@@ -1,10 +1,11 @@
 import React from 'react';
 import classes from './LoginForm.module.css';
 
+// login-form class added to form for 5.17
 const LoginForm = ({
   handleSubmit, username, setUsername, password, setPassword,
 }) => (
-  <form className={classes.Form} onSubmit={handleSubmit}>
+  <form className={[classes.Form, 'login-form'].join(' ')} onSubmit={handleSubmit}>
     <h1>Sign In</h1>
     <div>
       Username:&nbsp;&nbsp;&nbsp;
