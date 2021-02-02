@@ -62,11 +62,22 @@ describe('Blog app', function() {
       cy.get('#author-inp').type('React Tester');
       cy.get('#url-inp').type('www.reacttester.com/1');
       cy.get('#submit-new').click();
-      
+
       // blog display div will only contain successfully submitted blogs
       cy.get('.blog-display')
         .should('contain', 'Testing React');
     });
-  });
 
+    it('User can like a blog', function() {
+      cy.get('.toggle-button').click();
+      cy.get('#title-inp').type('Testing React');
+      cy.get('#author-inp').type('React Tester');
+      cy.get('#url-inp').type('www.reacttester.com/1');
+      cy.get('#submit-new').click();
+      cy.get('.toggleDisplayBtn').click();
+      cy.get('.blog-display')
+        .should('contain', 'Likes:0');
+      cy.get('.likeButton').click();
+    });
+  });
 });

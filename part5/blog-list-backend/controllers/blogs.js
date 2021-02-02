@@ -79,9 +79,10 @@ blogRouter.delete('/:id', async (request, response) => {
 
 // added for exercise 4.14
 // needs to have auth integrated at some point
+// updated for 5.8 to return json in a more standardized format
 blogRouter.put('/:id', async (request, response) => {
   const { body } = request;
-  const original = await Blog.findById(request.params.id);
+  const original = await Blog.findById(request.params.id).populate('user', { username: 1, name: 1 });
 
   if (!original) response.status(404).end();
 
@@ -94,8 +95,9 @@ blogRouter.put('/:id', async (request, response) => {
     likes: body.likes || originalJSON.likes,
   };
 
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true });
-  response.status(204).json(updatedBlog);
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true }).populate('user', { username: 1, name: 1 });
+  console.log(updatedBlog);
+  response.json(updatedBlog).status(204);
 });
 
 module.exports = blogRouter;
