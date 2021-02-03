@@ -23,3 +23,30 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+
+Cypress.Commands.add('addNote', (
+  title = 'Testing React',
+  author = 'React Tester',
+  url = 'www.reacttester.com/1'
+) => {
+  cy.get('.toggle-button').click();
+  cy.get('#title-inp').type(title);
+  cy.get('#author-inp').type(author);
+  cy.get('#url-inp').type(url);
+  cy.get('#submit-new').click();
+});
+
+Cypress.Commands.add('signIn', (username, password) => {
+  cy.get('#username').type(username);
+  cy.get('#password').type(password);
+  cy.get('#login-button').click();
+});
+
+Cypress.Commands.add('deleteOne', () => {
+  cy.get('.delete-blog').click();
+  cy.on('window:alert', (str) => {
+    expect(str).to.equal('Delete this Blog?')
+  })
+  cy.on('window:confirm', () => true);
+})

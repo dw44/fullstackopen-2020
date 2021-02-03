@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = '/api/blogs';
+const baseUrl = 'http://localhost:4000/api/blogs';
 
 // added for 5.3
 let token = '';
@@ -22,14 +22,11 @@ const createNew = async (newBlog) => {
   };
 
   const response = await axios.post(baseUrl, newBlog, config);
-  return response.data;
+  return response;
 };
 
 // added for 5.8
-const addLike = async (id, newBlog) => {
-  const response = await axios.put(`${baseUrl}/${id}`, newBlog);
-  return response;
-};
+const addLike = (id, newBlog) => axios.put(`${baseUrl}/${id}`, newBlog).then((response) => response.data);
 
 // added for 5.10
 const deleteBlog = async (id) => {

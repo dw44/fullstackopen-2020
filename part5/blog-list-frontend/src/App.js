@@ -1,148 +1,133 @@
 import React, { useState, useEffect, useRef } from 'react';
-
-import LoginForm from './components/LoginForm/LoginForm';
-import SignOut from './components/SignOut/SignOut';
-import CreateNew from './components/CreateNew/CreateNew';
-import BlogList from './components/BlogList/BlogList';
-import Notification from './components/Notification/Notification';
-import Togglable from './components/Togglable/Togglable';
+import BlogList from './components/BlogList';
+import LoginForm from './components/LoginForm';
+import CreateNew from './components/CreateNew';
+import Notification from './components/Notification';
+import Togglable from './components/Togglable';
 import blogService from './services/blogs';
-import loginService from './services/login';
-import './App.css';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  // added for 5.1. Authenticated user saved here
   const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState([null, null]);
+  // added for 5.4
+  const [notification, setNotification] = useState([null, 0]);
+  const [updatedLike, setUpdatedLike] = useState(false);
 
+  // updated for 5.9 to sort blogs by likes
   useEffect(() => {
-    // refactored for exercise 5.9 to sort by number of likes
     blogService
       .getAll()
       .then((blogs) => blogs.sort((b1, b2) => ((b1.likes > b2.likes) ? -1 : 1)))
       .then((blogs) => setBlogs(blogs));
   }, []);
 
+  // added for 5.2
   useEffect(() => {
-    const loggedInUser = JSON.parse(window.localStorage.getItem('loggedInUser'));
-    if (loggedInUser) {
-      setUser(loggedInUser);
-      blogService.setToken(loggedInUser.token);
+    const user = window.localStorage.getItem('loggedInUser');
+    if (user) {
+      const parsedUser = JSON.parse(user);
+      setUser(parsedUser);
+      blogService.setToken(parsedUser.token);
+    } else {
+      setUser(null);
     }
   }, []);
-
-  // added for 5.4
-  const handleNotification = (message, type = 'success') => {
-    // type defaults to success unless error is explicitly specified
-    setNotification([message, type]);
-    setTimeout(() => setNotification([null, null]), 4000);
-  };
-
-  // added for 5.1
-  // refactored for 5.4
-  const handleLogin = async (event) => {
-    event.preventDefault();
-    try {
-      const user = await loginService.login({ username, password });
-      blogService.setToken(user.token);
-      setUser(user);
-      setUsername('');
-      setPassword('');
-      window.localStorage.setItem('loggedInUser', JSON.stringify(user));
-      handleNotification(
-        `Successfully logged in as ${user.name}`,
-      );
-    } catch (error) {
-      setUsername('');
-      setPassword('');
-      handleNotification(
-        'Incorrect username or password',
-        'error',
-      );
-    }
-  };
-
-  // refactored to include notifications for 5.4
-  const handleLogout = () => {
-    window.localStorage.removeItem('loggedInUser');
-    setUser(null);
-    blogService.setToken('');
-    handleNotification(
-      'Successfully logged out',
-    );
-  };
 
   // added for 5.5
   const newBlogRef = useRef();
 
-  // refactored to include notifications for 5.4
-  // updated for 5.5
-  // refactored heavily for 5.16. Now takes a blog object and submits using axios
-  // doesn't serve as main event handler for submit any more
-  const submitNewBlog = async (blog) => {
-    const { author, title, url } = blog;
+  // helper for 5.4
+  const handleNotification = (text, type) => {
+    setNotification([text, type]);
+    setTimeout(() => {
+      setNotification([null, null]);
+    }, 5000);
+  };
+
+  // added for 5.2
+  const handleLogout = () => {
+    setUser('');
+    window.localStorage.clear();
+    handleNotification('Logged Out Successfully', 1);
+  };
+
+  // added for 5.3
+  // updated for 5.5 to close form after submit button is clicked
+  const submitBlog = async (blogObject) => {
     try {
-      const response = await blogService.createNew({
-        author,
-        title,
-        url,
-      });
-      setBlogs([...blogs, response]);
-      handleNotification(
-        `A new blog - ${response.title}, by ${response.author} - has been added`,
-      );
+      await blogService.createNew(blogObject)
+        .then((res) => {
+          setBlogs([...blogs, res.data]);
+        });
 
       newBlogRef.current.toggleVisible();
+      // added for 5.4
+      handleNotification('Blog Submitted Successfully', 1);
     } catch (error) {
-      handleNotification(
-        'Could not add blog entry. Verify that you\'re logged in and all fields are filled out!',
-        'error',
-      );
+      handleNotification('Failed to Submit Blog', 0);
       newBlogRef.current.toggleVisible();
     }
   };
 
-  // added for 5.15
-  const addLike = async (id, likes) => {
-    await blogService.addLike(id, {
-      likes: likes + 1,
-    });
+  const handleLike = async (id) => {
+    const blog = blogs.find((blog) => blog.id === id);
+    const newBlog = { ...blog, likes: blog.likes + 1 };
+    const updatedBlog = await blogService.addLike(id, newBlog);
+    setBlogs(blogs.map((blog) => (blog.id !== id ? blog : updatedBlog)));
+    setUpdatedLike(!updatedLike);
+    return updatedBlog;
   };
 
-  // added for 5.2
-  // refactored for 5.5
-  // BlogList modified for 5.15 to include addLike prop
-  const loggedInDisplay = () => (
-    <div>
-      <SignOut user={user} signOut={handleLogout} />
-      <Togglable buttonText="New Entry" ref={newBlogRef}>
-        <CreateNew
-          submitBlog={submitNewBlog}
-        />
-      </Togglable>
-      <BlogList addLike={addLike} blogs={blogs} />
-    </div>
-  );
+  // added for 5.10
+  const handleDelete = async (id) => {
+    // eslint-disable-next-line no-alert
+    const final = window.confirm('Delete this Blog?');
+    if (final) {
+      try {
+        await blogService.deleteBlog(id);
+        handleNotification('Blog Deleted Successfully');
+        setBlogs(blogs.filter((blog) => blog.id !== id));
+      } catch (error) {
+        if (error.response.status === 401) {
+          handleNotification(
+            'You are not authorized to delete this blog',
+            0,
+          );
+        } else {
+          handleNotification(
+            'Unable to delete this blog',
+            0,
+          );
+        }
+      }
+    }
+  };
 
-  // refactored to include notifications for 5.4
+  // add new blog form now uses togglable component starting from 5.5
   return (
     <div className="App">
-      {notification[0]
-        ? <Notification message={notification[0]} type={notification[1]} />
-        : null}
-      {user === null
+      {notification[0] ? <Notification text={notification[0]} type={notification[1]} /> : null}
+      {user
         ? (
-          <LoginForm
-            handleSubmit={handleLogin}
-            username={username}
-            setUsername={setUsername}
-            password={password}
-            setPassword={setPassword}
-          />
+          <div id="display-if-user">
+            <h1 id="login-announcement">
+              {user.name}
+              {' '}
+              Logged In
+            </h1>
+            <button id="logout-button" onClick={handleLogout}>Log Out</button>
+            <Togglable ref={newBlogRef} buttonLabel="Create New">
+              <CreateNew handleSubmit={submitBlog} />
+            </Togglable>
+            <BlogList
+              blogs={blogs}
+              addLike={handleLike}
+              handleDelete={handleDelete}
+            />
+          </div>
         )
-        : loggedInDisplay()}
+        : <LoginForm handleNotification={handleNotification} setUser={setUser} />}
     </div>
   );
 };

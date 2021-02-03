@@ -57,14 +57,14 @@ blogRouter.delete('/:id', async (request, response) => {
     response.status(401).json({ error: 'Must be logged in to delete a blog' });
   }
 
-  const blog = await Blog.findById(request.params.id);
+  const blog = await Blog.findById(request.params.id).populate('user', { username: 1, name: 1 });
 
   if (!blog) {
     // blog not found
     response.status(404).json({ error: 'Blog not found' });
   }
 
-  const blogUserID = blog.user.toString(); // user who saved blog
+  const blogUserID = blog.user.id.toString(); // user who saved blog
 
   if (blogUserID === decodedToken.id) {
     const user = await User.findById(blogUserID);
@@ -96,7 +96,6 @@ blogRouter.put('/:id', async (request, response) => {
   };
 
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true }).populate('user', { username: 1, name: 1 });
-  console.log(updatedBlog);
   response.json(updatedBlog).status(204);
 });
 
