@@ -1,9 +1,15 @@
 import { voteAnecdote } from '../reducers/anecdoteReducer';
+import { voteNotification, removeNotification } from '../reducers/notificationReducer';
 
 const AnecdoteList = ({ anecdotes, dispatch }) => {
   // updated for 6.3. moved here for 6.8
-  const vote = (id) => {
+  // updated for 6.11
+  const vote = (id, content) => {
     dispatch(voteAnecdote(id));
+    dispatch(voteNotification(content));
+    setTimeout(() => {
+      dispatch(removeNotification());
+    }, 5000);
   };
 
   return (
@@ -18,7 +24,7 @@ const AnecdoteList = ({ anecdotes, dispatch }) => {
             has
             {' '}
             {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => vote(anecdote.id, anecdote.content)}>vote</button>
           </div>
         </div>
       ))}
