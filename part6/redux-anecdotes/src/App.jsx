@@ -25,9 +25,6 @@ const App = () => {
       .filter((anecdote) => anecdote.content.includes(state.filter))
       .sort((anecA, anecB) => anecB.votes - anecA.votes);
   });
-
-  const filter = useSelector((state) => state.filter);
-  console.log(filter);
   // updated for 6.7
   return (
     <div>

@@ -3,11 +3,10 @@
 /* eslint-disable no-case-declarations */
 /* eslint-disable consistent-return */
 
-const getId = () => (100000 * Math.random()).toFixed(0);
-
 // Updated for 6.3
 // Updated for 6.4
 // Updated for 6.13
+// Updated for 6.14
 const reducer = (state = [], action) => {
   switch (action.type) {
   case 'VOTE_ANECDOTE':
@@ -18,7 +17,7 @@ const reducer = (state = [], action) => {
   case 'CREATE_ANECDOTE':
     return [...state, action.data];
   case 'INITIALIZE_ANECDOTES':
-    return state;
+    return action.data;
   default:
     return state;
   }
@@ -33,18 +32,19 @@ export const voteAnecdote = (id) => ({
 
 // action creator for 6.4
 // needed for 6.6. already done
-export const createAnecdote = (content) => ({
-  type: 'CREATE_ANECDOTE',
-  data: {
-    content,
-    id: getId(),
-    votes: 0,
-  },
-});
+// updated for 6.14
+export const createAnecdote = (content) => {
+  console.log(content);
+  return {
+    type: 'CREATE_ANECDOTE',
+    data: content,
+  };
+};
 
 // added for 6.13
-export const initializeAnecdotes = (data) => ({
+export const initializeAnecdotes = (anecdotes) => ({
   type: 'INITIALIZE_ANECDOTES',
-  data,
+  data: anecdotes,
 });
+
 export default reducer;

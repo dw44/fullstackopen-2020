@@ -1,5 +1,5 @@
 {
-  "anecdotes":[
+  "anecdotes": [
     {
       "content": "There is no team in Axe!",
       "id": "47145",
@@ -29,6 +29,11 @@
       "content": "Doom Bringer brings doom. Axe brings axe!",
       "id": "98312",
       "votes": 0
+    },
+    {
+      "content": "Axe in hand!",
+      "votes": 0,
+      "id": "8mYpiF6"
     }
   ]
 }
