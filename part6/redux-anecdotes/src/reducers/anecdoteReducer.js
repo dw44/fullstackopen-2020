@@ -2,6 +2,7 @@
 /* eslint-disable default-case */
 /* eslint-disable no-case-declarations */
 /* eslint-disable consistent-return */
+import anecdoteService from '../services/anecdoteService';
 
 // Updated for 6.3
 // Updated for 6.4
@@ -42,9 +43,13 @@ export const createAnecdote = (content) => {
 };
 
 // added for 6.13
-export const initializeAnecdotes = (anecdotes) => ({
-  type: 'INITIALIZE_ANECDOTES',
-  data: anecdotes,
-});
+// updated for 6.15 to work asynchronously with thunk
+export const initializeAnecdotes = () => async (dispatch) => {
+  const anecdotes = await anecdoteService.getAll();
+  dispatch({
+    type: 'INITIALIZE_ANECDOTES',
+    data: anecdotes,
+  });
+};
 
 export default reducer;

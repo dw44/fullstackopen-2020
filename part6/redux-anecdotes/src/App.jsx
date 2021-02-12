@@ -6,16 +6,16 @@ import AnecdoteList from './components/AnecdoteList';
 import Notification from './components/Notification';
 import Filter from './components/Filter';
 import { initializeAnecdotes } from './reducers/anecdoteReducer';
-import anecdoteService from './services/anecdoteService';
 
+// updated for 6.5 to sort by number of votes
+// updated for 6.12 to incorporate filter functionality4
+// updated for 6.15
 const App = () => {
-  // updated for 6.5 to sort by number of votes
-  // updated for 6.12 to incorporate filter functionality
-
   const dispatch = useDispatch();
 
+  // updated for 6.15
   useEffect(() => {
-    anecdoteService.getAll().then((anecdotes) => dispatch(initializeAnecdotes(anecdotes)));
+    dispatch(initializeAnecdotes());
   }, [dispatch]);
 
   const anecdotes = useSelector((state) => {
