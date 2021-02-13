@@ -1,9 +1,9 @@
 {
   "anecdotes": [
     {
+      "votes": 2,
       "content": "There is no team in Axe!",
-      "id": "47145",
-      "votes": 0
+      "id": "47145"
     },
     {
       "content": "This was in the bag the day Axe was born!",
@@ -16,8 +16,8 @@
       "votes": 0
     },
     {
-      "content": "Each of Ursa's claws is like a little axe. Axe reluctantly approves.",
-      "id": "36975",
+      "content": "Axe chops you down to size!",
+      "id": "67784",
       "votes": 0
     },
     {
@@ -31,9 +31,14 @@
       "votes": 0
     },
     {
+      "votes": 1,
       "content": "Axe in hand!",
-      "votes": 0,
       "id": "8mYpiF6"
+    },
+    {
+      "votes": 9,
+      "content": "ABCDEFG HIJKLMNOP QRSTUVWXYZ",
+      "id": "123456"
     }
   ]
 }

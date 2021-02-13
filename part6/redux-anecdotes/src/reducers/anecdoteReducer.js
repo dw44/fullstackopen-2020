@@ -26,10 +26,14 @@ const reducer = (state = [], action) => {
 
 // action creator for 6.3
 // needed for 6.6. already done
-export const voteAnecdote = (id) => ({
-  type: 'VOTE_ANECDOTE',
-  data: { id },
-});
+// updated for 6.17
+export const voteAnecdote = (id) => async (dispatch) => {
+  const response = await anecdoteService.upvote(id);
+  dispatch({
+    type: 'VOTE_ANECDOTE',
+    data: response,
+  });
+};
 
 // action creator for 6.4
 // needed for 6.6. already done
@@ -37,7 +41,6 @@ export const voteAnecdote = (id) => ({
 // updated for 6.16
 export const createAnecdote = (content) => async (dispatch) => {
   const anecdote = await anecdoteService.createNew(content);
-  console.log(anecdote);
   dispatch({
     type: 'CREATE_ANECDOTE',
     data: anecdote,

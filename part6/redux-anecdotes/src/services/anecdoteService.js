@@ -15,10 +15,18 @@ const createNew = async (content) => {
   return response.data;
 };
 
+// created for 6.17
+const upvote = async (id) => {
+  const anecdote = await axios.get(`${baseURL}/${id}`);
+  const response = await axios.put(`${baseURL}/${id}`, { votes: anecdote.data.votes + 1, content: anecdote.data.content, id });
+  return response.data;
+};
+
 // updated for 6.14
 const exports = {
   getAll,
   createNew,
+  upvote,
 };
 
 export default exports;
