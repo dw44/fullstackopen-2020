@@ -1,14 +1,14 @@
 {
   "anecdotes": [
     {
-      "votes": 2,
+      "votes": 16,
       "content": "There is no team in Axe!",
       "id": "47145"
     },
     {
+      "votes": 17,
       "content": "This was in the bag the day Axe was born!",
-      "id": "21149",
-      "votes": 0
+      "id": "21149"
     },
     {
       "content": "You might have been a fancyman in Heaven, but down here you are nothing next to Axe.",
@@ -16,27 +16,27 @@
       "votes": 0
     },
     {
+      "votes": 1,
       "content": "Axe chops you down to size!",
-      "id": "67784",
-      "votes": 0
+      "id": "67784"
     },
     {
+      "votes": 2,
       "content": "Taste the Axe. Not this Axe, that axe!",
-      "id": "25170",
-      "votes": 0
-    },
-    {
-      "content": "Doom Bringer brings doom. Axe brings axe!",
-      "id": "98312",
-      "votes": 0
+      "id": "25170"
     },
     {
       "votes": 1,
+      "content": "Doom Bringer brings doom. Axe brings axe!",
+      "id": "98312"
+    },
+    {
+      "votes": 3,
       "content": "Axe in hand!",
       "id": "8mYpiF6"
     },
     {
-      "votes": 9,
+      "votes": 12,
       "content": "ABCDEFG HIJKLMNOP QRSTUVWXYZ",
       "id": "123456"
     }

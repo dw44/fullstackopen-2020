@@ -1,30 +1,27 @@
 // created for 6.10
-// updatef for 6.11
+// updated for 6.11
+// updated for 6.18
 const notificationReducer = (state = '', action) => {
   switch (action.type) {
-  case 'REMOVE_NOTIFICATION':
-    return '';
-  case 'VOTE_NOTIFICATION':
-    return `You voted for "${action.data}"`;
-  case 'NEW_ANECDOTE_NOTIFICATION':
-    return `You added anecdote: "${action.data}"`;
+  case 'SET_NOTIFICATION':
+    return action.data;
   default:
     return state;
   }
 };
 
-export const removeNotification = () => ({
-  type: 'REMOVE_NOTIFICATION',
-});
-
-export const voteNotification = (data) => ({
-  type: 'VOTE_NOTIFICATION',
-  data,
-});
-
-export const newAnecdoteNotification = (data) => ({
-  type: 'NEW_ANECDOTE_NOTIFICATION',
-  data,
-});
+// added for 6.18
+export const setNotification = (content, time) => async (dispatch) => {
+  dispatch({
+    type: 'SET_NOTIFICATION',
+    data: content,
+  });
+  await setTimeout(() => {
+    dispatch({
+      type: 'SET_NOTIFICATION',
+      data: '',
+    });
+  }, time);
+};
 
 export default notificationReducer;
