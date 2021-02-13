@@ -34,12 +34,14 @@ export const voteAnecdote = (id) => ({
 // action creator for 6.4
 // needed for 6.6. already done
 // updated for 6.14
-export const createAnecdote = (content) => {
-  console.log(content);
-  return {
+// updated for 6.16
+export const createAnecdote = (content) => async (dispatch) => {
+  const anecdote = await anecdoteService.createNew(content);
+  console.log(anecdote);
+  dispatch({
     type: 'CREATE_ANECDOTE',
-    data: content,
-  };
+    data: anecdote,
+  });
 };
 
 // added for 6.13

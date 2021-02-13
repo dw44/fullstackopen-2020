@@ -9,8 +9,8 @@ const getAll = async () => {
 };
 
 // added for 6.14
+// updated for 6.16
 const createNew = async (content) => {
-  // const getId = () => (100000 * Math.random()).toFixed(0);
   const response = await axios.post(baseURL, { content, votes: 0 });
   return response.data;
 };
