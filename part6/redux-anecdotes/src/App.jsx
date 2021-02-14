@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 
 import AnecdoteForm from './components/AnecdoteForm';
 import AnecdoteList from './components/AnecdoteList';
@@ -11,13 +11,11 @@ import { initializeAnecdotes } from './reducers/anecdoteReducer';
 // updated for 6.12 to incorporate filter functionality4
 // updated for 6.15
 // updated for 6.19
-const App = () => {
-  const dispatch = useDispatch();
-
+const App = ({ initializeAnecdotes }) => {
   // updated for 6.15
   useEffect(() => {
-    dispatch(initializeAnecdotes());
-  }, [dispatch]);
+    initializeAnecdotes();
+  }, [connect]);
 
   // updated for 6.7
   return (
@@ -25,9 +23,17 @@ const App = () => {
       <Notification />
       <Filter />
       <AnecdoteList />
-      <AnecdoteForm dispatch={dispatch} />
+      <AnecdoteForm />
     </div>
   );
 };
 
-export default App;
+const mapDispatchToProps = {
+  initializeAnecdotes,
+};
+
+const ConnectedApp = connect(
+  null,
+  mapDispatchToProps,
+)(App);
+export default ConnectedApp;

@@ -5,12 +5,12 @@ import { voteAnecdote } from '../reducers/anecdoteReducer';
 import { setNotification } from '../reducers/notificationReducer';
 
 const AnecdoteList = ({
-  anecdotes, filter, voteAnecdote, setNotification,
+  anecdotestoDisplay, voteAnecdote, setNotification,
 }) => {
   // updated for 6.3. moved here for 6.8
   // updated for 6.11
   // updated for 6.18
-  // updated for 6.19
+  // updated for 6.20
   const vote = (id, content) => {
     voteAnecdote(id);
     setNotification(
@@ -19,18 +19,10 @@ const AnecdoteList = ({
     );
   };
 
-  // refactored and renamed for 6.19
-  const anecdotesToShow = () => {
-    if (filter.length) return anecdotes;
-    return anecdotes
-      .filter((anecdote) => anecdote.content.includes(filter))
-      .sort((anecA, anecB) => anecB.votes - anecA.votes);
-  };
-
   return (
     <div>
       <h2>Anecdotes</h2>
-      {anecdotesToShow().map((anecdote) => (
+      {anecdotestoDisplay.map((anecdote) => (
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -47,11 +39,18 @@ const AnecdoteList = ({
   );
 };
 
-// added for 6.19
-const mapStateToProps = (state) => ({
-  anecdotes: state.anecdotes,
-  filter: state.filter,
-});
+// added for 6.20
+const mapStateToProps = (state) => {
+  const { anecdotes, filter } = state;
+  // filter anecdotes from list of anecdotes
+  const anecdotestoDisplay = (filter.trim()
+    ? anecdotes
+      .filter((anecdote) => anecdote.content.includes(filter))
+    : anecdotes
+  ) // and then sort the filtered list
+    .sort((anecA, anecB) => anecB.votes - anecA.votes);
+  return { filter, anecdotestoDisplay };
+};
 
 // added for 6.19
 const mapDispatchToProps = {
