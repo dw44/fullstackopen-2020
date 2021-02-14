@@ -15,7 +15,7 @@ const AnecdoteList = ({
     voteAnecdote(id);
     setNotification(
       `Voted for anecdote "${content}"`,
-      3000,
+      4000,
     );
   };
 

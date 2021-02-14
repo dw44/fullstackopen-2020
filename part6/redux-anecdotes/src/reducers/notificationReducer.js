@@ -10,18 +10,29 @@ const notificationReducer = (state = '', action) => {
   }
 };
 
+// added for 6.21
+let hideNotificationTimer;
+
 // added for 6.18
+// updated for 6.21
 export const setNotification = (content, time) => async (dispatch) => {
+  clearTimeout(hideNotificationTimer);
+
+  const delayedClear = (time) => {
+    hideNotificationTimer = setTimeout(() => {
+      dispatch({
+        type: 'SET_NOTIFICATION',
+        data: '',
+      });
+    }, time);
+  };
+
   dispatch({
     type: 'SET_NOTIFICATION',
     data: content,
   });
-  await setTimeout(() => {
-    dispatch({
-      type: 'SET_NOTIFICATION',
-      data: '',
-    });
-  }, time);
+
+  await delayedClear(time);
 };
 
 export default notificationReducer;
