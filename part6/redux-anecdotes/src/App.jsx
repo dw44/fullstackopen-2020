@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import AnecdoteForm from './components/AnecdoteForm';
 import AnecdoteList from './components/AnecdoteList';
@@ -10,6 +10,7 @@ import { initializeAnecdotes } from './reducers/anecdoteReducer';
 // updated for 6.5 to sort by number of votes
 // updated for 6.12 to incorporate filter functionality4
 // updated for 6.15
+// updated for 6.19
 const App = () => {
   const dispatch = useDispatch();
 
@@ -18,19 +19,12 @@ const App = () => {
     dispatch(initializeAnecdotes());
   }, [dispatch]);
 
-  const anecdotes = useSelector((state) => {
-    if (!state.filter.length) return state.anecdotes;
-
-    return state.anecdotes
-      .filter((anecdote) => anecdote.content.includes(state.filter))
-      .sort((anecA, anecB) => anecB.votes - anecA.votes);
-  });
   // updated for 6.7
   return (
     <div>
       <Notification />
       <Filter />
-      <AnecdoteList anecdotes={anecdotes} dispatch={dispatch} />
+      <AnecdoteList />
       <AnecdoteForm dispatch={dispatch} />
     </div>
   );
