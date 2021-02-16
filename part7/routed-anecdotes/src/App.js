@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable max-len */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Link, Switch, Route, useRouteMatch,
+  Link, Switch, Route, useRouteMatch, Redirect,
 } from 'react-router-dom';
 
 // updated for 7.1
@@ -63,19 +63,24 @@ const Footer = () => (
   </div>
 );
 
-const CreateNew = (props) => {
+const CreateNew = ({ addNew, showNotification }) => {
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
   const [info, setInfo] = useState('');
+  // added for 7.3
+  const [submitted, setSubmitted] = useState(false);
 
+  // updated for 7.3
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.addNew({
+    addNew({
       content,
       author,
       info,
       votes: 0,
     });
+    showNotification(`Submitted anecdote "${content}"`);
+    setSubmitted(!submitted);
   };
 
   return (
@@ -96,6 +101,7 @@ const CreateNew = (props) => {
         </div>
         <button>create</button>
       </form>
+      {submitted ? <Redirect to="/" /> : null}
     </div>
   );
 };
@@ -147,7 +153,15 @@ const App = () => {
   const match = useRouteMatch('/anecdotes/:id');
   const anecdote = match ? anecdotes.find((anecdote) => anecdote.id === match.params.id) : null;
 
-  // const [notification, setNotification] = useState('');
+  const [notification, setNotification] = useState('');
+
+  // added for 7.3. The notification is set by the form which redirects here
+  // the useeffect hook clears any notification 10 sec after it's set
+  useEffect(() => {
+    setTimeout(() => {
+      setNotification('');
+    }, 10000);
+  }, [notification]);
 
   const addNew = (anecdote) => {
     // eslint-disable-next-line no-param-reassign
@@ -173,12 +187,13 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      <h1>{notification.length ? notification : null}</h1>
       <Switch>
         <Route path="/anecdotes/:id">
           <Anecdote anecdote={anecdote} />
         </Route>
         <Route path="/create">
-          <CreateNew addNew={addNew} />
+          <CreateNew addNew={addNew} showNotification={setNotification} />
         </Route>
         <Route path="/about">
           <About />
