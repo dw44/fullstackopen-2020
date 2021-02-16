@@ -1,7 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable max-len */
 import React, { useState } from 'react';
-import { Link, Switch, Route } from 'react-router-dom';
+import {
+  Link, Switch, Route, useRouteMatch,
+} from 'react-router-dom';
 
 // updated for 7.1
 const Menu = () => {
@@ -21,7 +23,11 @@ const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map((anecdote) => <li key={anecdote.id}>{anecdote.content}</li>)}
+      {anecdotes.map((anecdote) => (
+        <li key={anecdote.id}>
+          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>
+      ))}
     </ul>
   </div>
 );
@@ -94,6 +100,31 @@ const CreateNew = (props) => {
   );
 };
 
+const Anecdote = ({ anecdote }) => {
+  console.log(anecdote);
+  return (
+    <div>
+      <p>
+        <strong>Content:&nbsp;</strong>
+        {anecdote.content}
+      </p>
+      <p>
+        <strong>Author:&nbsp;</strong>
+        {' '}
+        {anecdote.author}
+      </p>
+      <p>
+        <strong>Info:&nbsp;</strong>
+        {anecdote.info}
+      </p>
+      <p>
+        <strong>Votes:&nbsp;</strong>
+        {anecdote.votes}
+      </p>
+    </div>
+  );
+};
+
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -111,6 +142,10 @@ const App = () => {
       id: '2',
     },
   ]);
+
+  // added for 7.2
+  const match = useRouteMatch('/anecdotes/:id');
+  const anecdote = match ? anecdotes.find((anecdote) => anecdote.id === match.params.id) : null;
 
   // const [notification, setNotification] = useState('');
 
@@ -133,11 +168,15 @@ const App = () => {
   //   setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
   // };
 
+  // updated for 7.2
   return (
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
       <Switch>
+        <Route path="/anecdotes/:id">
+          <Anecdote anecdote={anecdote} />
+        </Route>
         <Route path="/create">
           <CreateNew addNew={addNew} />
         </Route>
