@@ -88,6 +88,14 @@ const CreateNew = ({ addNew, showNotification }) => {
     setSubmitted(!submitted);
   };
 
+  // added for 7.5
+  const handleClear = () => {
+    author.clearField();
+    content.clearField();
+    info.clearField();
+  };
+
+  // updated for 7.5
   return (
     <div>
       <h2>create a new anecdote</h2>
@@ -105,6 +113,7 @@ const CreateNew = ({ addNew, showNotification }) => {
           <input name="info" {...info} />
         </div>
         <button>create</button>
+        <button type="button" onClick={handleClear}>clear all</button>
       </form>
       {submitted ? <Redirect to="/" /> : null}
     </div>

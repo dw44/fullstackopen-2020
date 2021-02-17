@@ -2,6 +2,7 @@
 import { useState } from 'react';
 
 // created for 7.4
+// updated for 7.5
 export const useField = (type) => {
   const [value, setValue] = useState('');
 
@@ -9,5 +10,11 @@ export const useField = (type) => {
     setValue(event.target.value);
   };
 
-  return { type, value, onChange };
+  const clearField = () => {
+    setValue('');
+  };
+
+  return {
+    type, value, onChange, clearField,
+  };
 };
