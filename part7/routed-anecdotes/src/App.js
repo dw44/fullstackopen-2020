@@ -1,9 +1,12 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable max-len */
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Link, Switch, Route, useRouteMatch, Redirect,
 } from 'react-router-dom';
+
+import { useField } from './hooks/index';
 
 // updated for 7.1
 const Menu = () => {
@@ -63,23 +66,25 @@ const Footer = () => (
   </div>
 );
 
+// updated for 7.4
 const CreateNew = ({ addNew, showNotification }) => {
-  const [content, setContent] = useState('');
-  const [author, setAuthor] = useState('');
-  const [info, setInfo] = useState('');
+  const author = useField('text');
+  const content = useField('text');
+  const info = useField('text');
   // added for 7.3
   const [submitted, setSubmitted] = useState(false);
 
   // updated for 7.3
+  // updated for 7.4
   const handleSubmit = (e) => {
     e.preventDefault();
     addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0,
     });
-    showNotification(`Submitted anecdote "${content}"`);
+    showNotification(`Submitted anecdote "${content.value}"`);
     setSubmitted(!submitted);
   };
 
@@ -89,15 +94,15 @@ const CreateNew = ({ addNew, showNotification }) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name="content" value={content} onChange={(e) => setContent(e.target.value)} />
+          <input name="content" {...content} />
         </div>
         <div>
           author
-          <input name="author" value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input name="author" {...author} />
         </div>
         <div>
           url for more info
-          <input name="info" value={info} onChange={(e) => setInfo(e.target.value)} />
+          <input name="info" {...info} />
         </div>
         <button>create</button>
       </form>
