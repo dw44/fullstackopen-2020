@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable max-len */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Link, Switch, Route, useRouteMatch, Redirect,
 } from 'react-router-dom';
@@ -67,15 +67,20 @@ const Footer = () => (
 );
 
 // updated for 7.4
+// updated for 7.5
+// updated for 7.6
 const CreateNew = ({ addNew, showNotification }) => {
-  const author = useField('text');
-  const content = useField('text');
-  const info = useField('text');
+  const [author, clearAuthor] = useField('text');
+  const [content, clearContent] = useField('text');
+  const [info, clearInfo] = useField('text');
   // added for 7.3
   const [submitted, setSubmitted] = useState(false);
 
+  const formRef = useRef(null);
+
   // updated for 7.3
   // updated for 7.4
+  // updated for 7.5x
   const handleSubmit = (e) => {
     e.preventDefault();
     addNew({
@@ -88,18 +93,18 @@ const CreateNew = ({ addNew, showNotification }) => {
     setSubmitted(!submitted);
   };
 
-  // added for 7.5
-  const handleClear = () => {
-    author.clearField();
-    content.clearField();
-    info.clearField();
+  // updated for 7.6
+  const resetForm = () => {
+    clearAuthor();
+    clearContent();
+    clearInfo();
   };
 
   // updated for 7.5
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <form id="new-anecdote" ref={formRef} onSubmit={handleSubmit}>
         <div>
           content
           <input name="content" {...content} />
@@ -113,7 +118,7 @@ const CreateNew = ({ addNew, showNotification }) => {
           <input name="info" {...info} />
         </div>
         <button>create</button>
-        <button type="button" onClick={handleClear}>clear all</button>
+        <button type="reset" onClick={resetForm}>clear all</button>
       </form>
       {submitted ? <Redirect to="/" /> : null}
     </div>

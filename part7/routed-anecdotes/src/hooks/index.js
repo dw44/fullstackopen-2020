@@ -14,7 +14,9 @@ export const useField = (type) => {
     setValue('');
   };
 
-  return {
-    type, value, onChange, clearField,
-  };
+  // refactored for 7.6
+  return [
+    { type, value, onChange },
+    clearField,
+  ];
 };
