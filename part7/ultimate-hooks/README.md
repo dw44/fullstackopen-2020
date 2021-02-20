@@ -1,0 +1,1 @@
+This project covers exercise 7.8sss of the Full Stack Open. A custom version of the Airbnb eslint configuration was used.

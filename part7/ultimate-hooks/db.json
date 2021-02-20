@@ -1,0 +1,37 @@
+{
+  "notes": [
+    {
+      "content": "custom-hookit aivan mahtavia",
+      "id": 1
+    },
+    {
+      "content": "paras feature ikinä <3",
+      "id": 2
+    },
+    {
+      "content": "asdsadsad",
+      "id": 3
+    },
+    {
+      "content": "cxzcxc",
+      "id": 4
+    }
+  ],
+  "persons": [
+    {
+      "name": "mluukkai",
+      "number": "040-5483923",
+      "id": 1
+    },
+    {
+      "name": "Mogul Khan",
+      "number": "725884416",
+      "id": 2
+    },
+    {
+      "name": "cxzcxzc",
+      "number": "zxcxzc",
+      "id": 3
+    }
+  ]
+}
