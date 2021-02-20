@@ -1,0 +1,1 @@
+This project covers exercise 7.7 of the Full Stack Open. A custom version of the Airbnb eslint configuration was used. The app successfully fulfils the requirements specified in exercise 7.7. 
