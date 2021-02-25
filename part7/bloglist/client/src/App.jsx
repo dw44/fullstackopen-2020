@@ -8,18 +8,19 @@ import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import blogService from './services/blogs';
 import { setNotification } from './reducers/notificationReducer';
+// added for 7.10
+import { initializeBlogList } from './reducers/blogReducer';
 
 // modified for 7.9 to get state/action creator for notification from redux
-const App = ({ notification, setNotification }) => {
-  const [blogs, setBlogs] = useState([]);
+const App = ({
+  notification, setNotification, blogs, initializeBlogList,
+}) => {
+  const [, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [updatedLike, setUpdatedLike] = useState(false);
 
   useEffect(() => {
-    blogService
-      .getAll()
-      .then((blogs) => blogs.sort((b1, b2) => ((b1.likes > b2.likes) ? -1 : 1)))
-      .then((blogs) => setBlogs(blogs));
+    initializeBlogList();
   }, []);
 
   useEffect(() => {
@@ -121,13 +122,14 @@ const App = ({ notification, setNotification }) => {
   );
 };
 
-// mapStateToProps, mapDispatchToProps, and connect added for 7.9
-const mapStateToProps = (state) => ({
-  notification: state,
-});
+const mapStateToProps = (state) => {
+  const { blogs, notification } = state;
+  return { blogs, notification };
+};
 
 const mapDispatchToProps = {
   setNotification,
+  initializeBlogList,
 };
 
 const ConnectedApp = connect(
