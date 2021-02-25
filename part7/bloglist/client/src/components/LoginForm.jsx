@@ -6,9 +6,6 @@ const LoginForm = ({ setUser, handleNotification }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  // updated for 5.2 to include localStorage
-  // updated for 5.4 to include notifications
-  // refactored after bug discovered during failed e2e tests in 5.19
   const handleLogin = async (event) => {
     event.preventDefault();
     try {

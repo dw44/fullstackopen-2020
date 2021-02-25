@@ -8,13 +8,10 @@ import blogService from './services/blogs';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  // added for 5.1. Authenticated user saved here
   const [user, setUser] = useState(null);
-  // added for 5.4
   const [notification, setNotification] = useState([null, 0]);
   const [updatedLike, setUpdatedLike] = useState(false);
 
-  // updated for 5.9 to sort blogs by likes
   useEffect(() => {
     blogService
       .getAll()
@@ -22,7 +19,6 @@ const App = () => {
       .then((blogs) => setBlogs(blogs));
   }, []);
 
-  // added for 5.2
   useEffect(() => {
     const user = window.localStorage.getItem('loggedInUser');
     if (user) {
@@ -34,10 +30,8 @@ const App = () => {
     }
   }, []);
 
-  // added for 5.5
   const newBlogRef = useRef();
 
-  // helper for 5.4
   const handleNotification = (text, type) => {
     setNotification([text, type]);
     setTimeout(() => {
@@ -45,15 +39,12 @@ const App = () => {
     }, 5000);
   };
 
-  // added for 5.2
   const handleLogout = () => {
     setUser('');
     window.localStorage.clear();
     handleNotification('Logged Out Successfully', 1);
   };
 
-  // added for 5.3
-  // updated for 5.5 to close form after submit button is clicked
   const submitBlog = async (blogObject) => {
     try {
       await blogService.createNew(blogObject)
@@ -79,7 +70,6 @@ const App = () => {
     return updatedBlog;
   };
 
-  // added for 5.10
   const handleDelete = async (id) => {
     // eslint-disable-next-line no-alert
     const final = window.confirm('Delete this Blog?');
@@ -104,7 +94,6 @@ const App = () => {
     }
   };
 
-  // add new blog form now uses togglable component starting from 5.5
   return (
     <div className="App">
       {notification[0] ? <Notification text={notification[0]} type={notification[1]} /> : null}

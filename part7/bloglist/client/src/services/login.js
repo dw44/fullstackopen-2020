@@ -1,4 +1,3 @@
-// service added for exercise 5.1
 import axios from 'axios';
 
 const baseUrl = 'http://localhost:4000/api/login';

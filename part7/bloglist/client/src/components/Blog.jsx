@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-// updated for 5.7 to include blog details
 const Blog = ({ blog, addLike, handleDelete }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [likes, setLikes] = useState(blog.likes);
