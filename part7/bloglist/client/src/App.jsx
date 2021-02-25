@@ -1,15 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
+
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
 import CreateNew from './components/CreateNew';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import blogService from './services/blogs';
+import { setNotification } from './reducers/notificationReducer';
 
-const App = () => {
+// modified for 7.9 to get state/action creator for notification from redux
+const App = ({ notification, setNotification }) => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState([null, 0]);
   const [updatedLike, setUpdatedLike] = useState(false);
 
   useEffect(() => {
@@ -32,19 +35,13 @@ const App = () => {
 
   const newBlogRef = useRef();
 
-  const handleNotification = (text, type) => {
-    setNotification([text, type]);
-    setTimeout(() => {
-      setNotification([null, null]);
-    }, 5000);
-  };
-
   const handleLogout = () => {
     setUser('');
     window.localStorage.clear();
-    handleNotification('Logged Out Successfully', 1);
+    setNotification(['Logged Out Successfully', 1], 5000);
   };
 
+  // updated for 7.9 to use new action creator for notifications
   const submitBlog = async (blogObject) => {
     try {
       await blogService.createNew(blogObject)
@@ -54,9 +51,9 @@ const App = () => {
 
       newBlogRef.current.toggleVisible();
       // added for 5.4
-      handleNotification('Blog Submitted Successfully', 1);
+      setNotification(['Blog Submitted Successfully', 1], 5000);
     } catch (error) {
-      handleNotification('Failed to Submit Blog', 0);
+      setNotification(['Failed to Submit Blog', 0], 5000);
       newBlogRef.current.toggleVisible();
     }
   };
@@ -70,24 +67,27 @@ const App = () => {
     return updatedBlog;
   };
 
+  // updated for 7.9 to use new action creator for notifications
   const handleDelete = async (id) => {
     // eslint-disable-next-line no-alert
     const final = window.confirm('Delete this Blog?');
     if (final) {
       try {
         await blogService.deleteBlog(id);
-        handleNotification('Blog Deleted Successfully');
+        setNotification(['Blog Deleted Successfully', 1], 5000);
         setBlogs(blogs.filter((blog) => blog.id !== id));
       } catch (error) {
         if (error.response.status === 401) {
-          handleNotification(
-            'You are not authorized to delete this blog',
-            0,
+          setNotification(
+            ['You are not authorized to delete this blog',
+              0],
+            5000,
           );
         } else {
-          handleNotification(
-            'Unable to delete this blog',
-            0,
+          setNotification(
+            ['Unable to delete this blog',
+              0],
+            5000,
           );
         }
       }
@@ -116,9 +116,23 @@ const App = () => {
             />
           </div>
         )
-        : <LoginForm handleNotification={handleNotification} setUser={setUser} />}
+        : <LoginForm setNotification={setNotification} setUser={setUser} />}
     </div>
   );
 };
 
-export default App;
+// mapStateToProps, mapDispatchToProps, and connect added for 7.9
+const mapStateToProps = (state) => ({
+  notification: state,
+});
+
+const mapDispatchToProps = {
+  setNotification,
+};
+
+const ConnectedApp = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(App);
+
+export default ConnectedApp;

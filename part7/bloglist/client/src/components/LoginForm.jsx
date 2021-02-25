@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import loginService from '../services/login';
 import blogService from '../services/blogs';
 
-const LoginForm = ({ setUser, handleNotification }) => {
+const LoginForm = ({ setUser, setNotification }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  // updated to use action creator for notifications. ac passed as prop by 'App'
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -17,15 +18,17 @@ const LoginForm = ({ setUser, handleNotification }) => {
         'loggedInUser', JSON.stringify(user),
       );
       setUser(user);
-      handleNotification(
-        `${user.name} Successfully Logged In`,
-        1,
+      setNotification(
+        [`${user.name} Successfully Logged In`,
+          1],
+        5000,
       );
       blogService.setToken(user.token);
     } catch (error) {
-      handleNotification(
-        'Invalid Username or Password',
-        0,
+      setNotification(
+        ['Invalid Username or Password',
+          0],
+        5000,
       );
       setUser(null);
       setUsername('');
