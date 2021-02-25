@@ -1,14 +1,18 @@
+import { cloneDeep } from 'lodash';
 import blogService from '../services/blogs';
 
 export default function blogReducer(state = [], action) {
   switch (action.type) {
   case 'INITIALIZE_BLOGLIST':
-    return [...action.data];
+    return cloneDeep(action.data);
+  case 'ADD_BLOG':
+    return cloneDeep(state).concat(cloneDeep(action.data));
   default:
-    return state;
+    return cloneDeep(state);
   }
 }
 
+// added for 7.10
 // fetching data from DB at app load to initialize blogs array
 export const initializeBlogList = () => async (dispatch) => {
   const blogs = await blogService.getAll();
@@ -17,3 +21,9 @@ export const initializeBlogList = () => async (dispatch) => {
     data: [...blogs],
   });
 };
+
+// added for 7.10
+export const addBlog = (data) => ({
+  type: 'ADD_BLOG',
+  data,
+});

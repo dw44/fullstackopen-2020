@@ -9,16 +9,16 @@ import Togglable from './components/Togglable';
 import blogService from './services/blogs';
 import { setNotification } from './reducers/notificationReducer';
 // added for 7.10
-import { initializeBlogList } from './reducers/blogReducer';
+import { initializeBlogList, addBlog } from './reducers/blogReducer';
 
 // modified for 7.9 to get state/action creator for notification from redux
 const App = ({
-  notification, setNotification, blogs, initializeBlogList,
+  notification, setNotification, blogs, initializeBlogList, addBlog,
 }) => {
-  const [, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [updatedLike, setUpdatedLike] = useState(false);
-
+  const [, setBlogs] = useState([]);
+  // refactored to use action creator for 7.10
   useEffect(() => {
     initializeBlogList();
   }, []);
@@ -43,11 +43,12 @@ const App = ({
   };
 
   // updated for 7.9 to use new action creator for notifications
+  // updated for 7.10 to fetch initial list and add blogs using redux
   const submitBlog = async (blogObject) => {
     try {
       await blogService.createNew(blogObject)
         .then((res) => {
-          setBlogs([...blogs, res.data]);
+          addBlog(res.data);
         });
 
       newBlogRef.current.toggleVisible();
@@ -122,16 +123,22 @@ const App = ({
   );
 };
 
+// added for 7.9
+// updated for 7.10
 const mapStateToProps = (state) => {
   const { blogs, notification } = state;
   return { blogs, notification };
 };
 
+// added for 7.9
+// updated for 7.10
 const mapDispatchToProps = {
   setNotification,
   initializeBlogList,
+  addBlog,
 };
 
+// added for 7.9
 const ConnectedApp = connect(
   mapStateToProps,
   mapDispatchToProps,
