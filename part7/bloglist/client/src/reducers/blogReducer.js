@@ -7,6 +7,11 @@ export default function blogReducer(state = [], action) {
     return cloneDeep(action.data);
   case 'ADD_BLOG':
     return cloneDeep(state).concat(cloneDeep(action.data));
+  case 'LIKE_BLOG':
+    // added for 7.11 to handle likes
+    return state.map((blog) => (blog.id === action.data.id
+      ? cloneDeep(action.data)
+      : cloneDeep(blog)));
   default:
     return cloneDeep(state);
   }
@@ -25,5 +30,10 @@ export const initializeBlogList = () => async (dispatch) => {
 // added for 7.10
 export const addBlog = (data) => ({
   type: 'ADD_BLOG',
+  data,
+});
+
+export const likeBlog = (data) => ({
+  type: 'LIKE_BLOG',
   data,
 });

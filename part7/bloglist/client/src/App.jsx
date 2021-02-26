@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
+import { cloneDeep } from 'lodash';
 
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
@@ -9,7 +10,7 @@ import Togglable from './components/Togglable';
 import blogService from './services/blogs';
 import { setNotification } from './reducers/notificationReducer';
 // added for 7.10
-import { initializeBlogList, addBlog } from './reducers/blogReducer';
+import { initializeBlogList, addBlog, likeBlog } from './reducers/blogReducer';
 
 // modified for 7.9 to get state/action creator for notification from redux
 const App = ({
@@ -22,6 +23,11 @@ const App = ({
   useEffect(() => {
     initializeBlogList();
   }, []);
+
+  // rerenders sorted list if new likes are added
+  useEffect(() => {
+    initializeBlogList();
+  }, [updatedLike]);
 
   useEffect(() => {
     const user = window.localStorage.getItem('loggedInUser');
@@ -60,11 +66,14 @@ const App = ({
     }
   };
 
+  // updated for 7.11 to handle like state updats through redux
   const handleLike = async (id) => {
     const blog = blogs.find((blog) => blog.id === id);
     const newBlog = { ...blog, likes: blog.likes + 1 };
     const updatedBlog = await blogService.addLike(id, newBlog);
-    setBlogs(blogs.map((blog) => (blog.id !== id ? blog : updatedBlog)));
+    // this part is to be replaced
+    likeBlog(cloneDeep(updatedBlog));
+    // this part is NOT
     setUpdatedLike(!updatedLike);
     return updatedBlog;
   };
@@ -75,7 +84,7 @@ const App = ({
     const final = window.confirm('Delete this Blog?');
     if (final) {
       try {
-        await blogService.deleteBlog(id);
+        await blogService.deletBlog(id);
         setNotification(['Blog Deleted Successfully', 1], 5000);
         setBlogs(blogs.filter((blog) => blog.id !== id));
       } catch (error) {
@@ -127,11 +136,12 @@ const App = ({
 // updated for 7.10
 const mapStateToProps = (state) => {
   const { blogs, notification } = state;
-  return { blogs, notification };
+  const sortedBlogs = blogs.sort((b1, b2) => ((b1.likes > b2.likes) ? -1 : 1));
+  return { blogs: sortedBlogs, notification };
 };
 
 // added for 7.9
-// updated for 7.10
+// updated for 7.10 / 7.11
 const mapDispatchToProps = {
   setNotification,
   initializeBlogList,

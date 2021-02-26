@@ -2,13 +2,12 @@ import { useState } from 'react';
 
 const Blog = ({ blog, addLike, handleDelete }) => {
   const [showDetails, setShowDetails] = useState(false);
-  const [likes, setLikes] = useState(blog.likes);
 
   const toggleDetailVisibility = () => setShowDetails(!showDetails);
 
-  const handleLike = async () => {
-    await addLike(blog.id);
-    setLikes(likes + 1);
+  // updated for 7.11
+  const handleLike = () => {
+    addLike(blog.id);
   };
 
   return (
@@ -31,7 +30,7 @@ const Blog = ({ blog, addLike, handleDelete }) => {
         <div style={{ display: showDetails ? '' : 'none' }}>
           <p>{`URL: ${blog.url}`}</p>
           <p>
-            {`Likes: ${likes}`}
+            {`Likes: ${blog.likes}`}
             {'  '}
             <button onClick={handleLike}>Like</button>
           </p>
