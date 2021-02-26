@@ -10,15 +10,16 @@ import Togglable from './components/Togglable';
 import blogService from './services/blogs';
 import { setNotification } from './reducers/notificationReducer';
 // added for 7.10
-import { initializeBlogList, addBlog, likeBlog } from './reducers/blogReducer';
+import {
+  initializeBlogList, addBlog, likeBlog, removeBlog,
+} from './reducers/blogReducer';
 
 // modified for 7.9 to get state/action creator for notification from redux
 const App = ({
-  notification, setNotification, blogs, initializeBlogList, addBlog,
+  notification, setNotification, blogs, initializeBlogList, addBlog, removeBlog,
 }) => {
   const [user, setUser] = useState(null);
   const [updatedLike, setUpdatedLike] = useState(false);
-  const [, setBlogs] = useState([]);
   // refactored to use action creator for 7.10
   useEffect(() => {
     initializeBlogList();
@@ -79,16 +80,17 @@ const App = ({
   };
 
   // updated for 7.9 to use new action creator for notifications
+  // updated for 7.11 to use new action creator to remove deleted blogs from state
   const handleDelete = async (id) => {
     // eslint-disable-next-line no-alert
     const final = window.confirm('Delete this Blog?');
     if (final) {
       try {
-        await blogService.deletBlog(id);
+        await blogService.deleteBlog(id);
+        removeBlog(id);
         setNotification(['Blog Deleted Successfully', 1], 5000);
-        setBlogs(blogs.filter((blog) => blog.id !== id));
       } catch (error) {
-        if (error.response.status === 401) {
+        if (error.response && error.response.status === 401) {
           setNotification(
             ['You are not authorized to delete this blog',
               0],
@@ -146,6 +148,7 @@ const mapDispatchToProps = {
   setNotification,
   initializeBlogList,
   addBlog,
+  removeBlog,
 };
 
 // added for 7.9

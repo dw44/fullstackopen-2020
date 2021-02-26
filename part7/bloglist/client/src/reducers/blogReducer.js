@@ -12,6 +12,12 @@ export default function blogReducer(state = [], action) {
     return state.map((blog) => (blog.id === action.data.id
       ? cloneDeep(action.data)
       : cloneDeep(blog)));
+  case 'REMOVE_BLOG':
+    console.log('Delete Action Creator');
+    return state.filter((blog) => {
+      if (blog.id !== action.data) return cloneDeep(blog);
+      return null;
+    });
   default:
     return cloneDeep(state);
   }
@@ -33,7 +39,14 @@ export const addBlog = (data) => ({
   data,
 });
 
+// added for 7.11
 export const likeBlog = (data) => ({
   type: 'LIKE_BLOG',
+  data,
+});
+
+// added for 7.11
+export const removeBlog = (data) => ({
+  type: 'REMOVE_BLOG',
   data,
 });
