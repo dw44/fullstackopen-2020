@@ -22,6 +22,11 @@ part5
 part6
   unicafe-redux
   redux-anecdotes
+part7
+  bloglist
+  country-hook
+  routed-anecdotes
+  ultimate-hooks
 ```
 
 Where an exercise in one part of the course builds on an exercise from a previous part, the project from the previous part is not modified. Instead, a new copy of the exercise, based on the state of the project at the conclusion of the most recent part it was used in, is created and any further work for that part of the course is done in that copy. 
@@ -33,7 +38,8 @@ Part 2<br/>
 Part 3<br/>
 Part 4<br />
 Part 5<br />
-Part 6
+Part 6<br />
+Part 7
 
 # Links to deployed apps:
 [Production Phonebook app deployed to Heroku for section 3](https://phonebook-fso-444.herokuapp.com/)

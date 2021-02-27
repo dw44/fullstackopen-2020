@@ -28,7 +28,7 @@ export const initializeBlogList = () => async (dispatch) => {
   const blogs = await blogService.getAll();
   dispatch({
     type: 'INITIALIZE_BLOGLIST',
-    data: [...blogs],
+    data: cloneDeep(blogs),
   });
 };
 

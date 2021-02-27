@@ -57,7 +57,7 @@ const App = ({
     try {
       await blogService.createNew(blogObject)
         .then((res) => {
-          addBlog(res.data);
+          addBlog(cloneDeep(res.data));
         });
 
       newBlogRef.current.toggleVisible();
