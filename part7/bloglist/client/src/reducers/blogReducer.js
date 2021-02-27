@@ -13,13 +13,12 @@ export default function blogReducer(state = [], action) {
       ? cloneDeep(action.data)
       : cloneDeep(blog)));
   case 'REMOVE_BLOG':
-    console.log('Delete Action Creator');
     return state.filter((blog) => {
       if (blog.id !== action.data) return cloneDeep(blog);
       return null;
     });
   default:
-    return cloneDeep(state);
+    return state;
   }
 }
 

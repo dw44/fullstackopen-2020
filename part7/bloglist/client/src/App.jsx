@@ -13,12 +13,12 @@ import { setNotification } from './reducers/notificationReducer';
 import {
   initializeBlogList, addBlog, likeBlog, removeBlog,
 } from './reducers/blogReducer';
+import { setUser } from './reducers/userReducer';
 
 // modified for 7.9 to get state/action creator for notification from redux
 const App = ({
-  notification, setNotification, blogs, initializeBlogList, addBlog, removeBlog,
+  notification, setNotification, blogs, initializeBlogList, addBlog, removeBlog, user, setUser,
 }) => {
-  const [user, setUser] = useState(null);
   const [updatedLike, setUpdatedLike] = useState(false);
   // refactored to use action creator for 7.10
   useEffect(() => {
@@ -30,11 +30,12 @@ const App = ({
     initializeBlogList();
   }, [updatedLike]);
 
+  // updated for 7.12
   useEffect(() => {
     const user = window.localStorage.getItem('loggedInUser');
     if (user) {
       const parsedUser = JSON.parse(user);
-      setUser(parsedUser);
+      setUser({ ...parsedUser });
       blogService.setToken(parsedUser.token);
     } else {
       setUser(null);
@@ -43,8 +44,9 @@ const App = ({
 
   const newBlogRef = useRef();
 
+  // updated for 7.12
   const handleLogout = () => {
-    setUser('');
+    setUser(null);
     window.localStorage.clear();
     setNotification(['Logged Out Successfully', 1], 5000);
   };
@@ -137,9 +139,9 @@ const App = ({
 // added for 7.9
 // updated for 7.10
 const mapStateToProps = (state) => {
-  const { blogs, notification } = state;
+  const { blogs, notification, user } = state;
   const sortedBlogs = blogs.sort((b1, b2) => ((b1.likes > b2.likes) ? -1 : 1));
-  return { blogs: sortedBlogs, notification };
+  return { blogs: sortedBlogs, notification, user };
 };
 
 // added for 7.9
@@ -149,6 +151,7 @@ const mapDispatchToProps = {
   initializeBlogList,
   addBlog,
   removeBlog,
+  setUser,
 };
 
 // added for 7.9
