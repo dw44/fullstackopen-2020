@@ -43,3 +43,6 @@ Part 7
 
 # Links to deployed apps:
 [Production Phonebook app deployed to Heroku for section 3](https://phonebook-fso-444.herokuapp.com/)
+
+# Certificate
+[Certificate](/Certificate.png)
